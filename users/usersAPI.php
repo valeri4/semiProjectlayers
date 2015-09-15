@@ -1,6 +1,6 @@
 <?php
 
-require_once 'logRegProfileLogic.php';
+require_once 'usersLogic.php';
 
 $command = $_REQUEST['command'];
 
@@ -18,7 +18,7 @@ switch ($command) {
         $email = $_POST['email'];
         echo check_reg_email($email);
         break;
-    
+
     //Registration new user
     case 'registration':
         $username = $_POST['username'];
@@ -36,5 +36,20 @@ switch ($command) {
         $email = $_POST['email_login'];
         $user_password = $_POST['pwd_login'];
         echo log_in($email, $user_password);
+        break;
+
+    case 'get_user_profile':
+        echo view_user_profile();
+        break;
+    
+        //Registration new user
+    case 'update_user_profile':
+        $firstName = $_POST['firstName'];
+        $lastName = $_POST['lastName'];
+        $password = $_POST['password'];
+        $about = $_POST['about'];
+        $date = $_POST['date'];
+        $gender = $_POST['gender'];
+        echo updte_user_profile($firstName, $lastName, $password, $date, $gender, $about);
         break;
 }

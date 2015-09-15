@@ -1,5 +1,33 @@
 $(function () {
 
+
+    //Get User Profile Data
+    $.ajax({
+        type: 'GET',
+        url: "users/usersAPI.php",
+        data: {command: "get_user_profile"},
+        error: function (err) {
+            console.log("Error: " + err.status);
+        },
+        success: function (userData) {
+            userData = JSON.parse(userData);
+            console.dir(userData);
+
+            $('#username').val(userData.username);
+            $('#firstName').val(userData.firstName);
+            $('#lastName').val(userData.lastName);
+            $('#email').val(userData.email);
+            $('#bdayCalendar').val(userData.date);
+            $('#about').val(userData.about);
+
+            if (userData.gender == 'male') {
+                $('#male').prop('checked', true);
+            } else {
+                $('#female').prop('checked', true);
+            }
+        }
+    });
+
     //UserInfo Validation
     $('#userInfo').formValidation({
         message: 'This value is not valid',
@@ -64,8 +92,19 @@ $(function () {
         e.preventDefault();
 
         var $form = $(e.target),
-            fv = $(e.target).data('formValidation');
+                fv = $(e.target).data('formValidation');
 
-        fv.defaultSubmit();
+
+        $.ajax({
+            url: 'users/use',
+            type: 'POST',
+            data: $form.serialize(),
+            success: function (result) {
+                //If Registration passed -> redirect to index.php
+                if (result == 1) {
+                    window.location.href = "index.php";
+                }
+            }
+        });
     });
 });

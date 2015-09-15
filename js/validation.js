@@ -1,9 +1,9 @@
 
 $(function () {
 
-    /*
-     * Registration Form Validation
-     */
+    /********************************
+     * Registration Form Validation *
+     ********************************/
 
     $('#defaultForm').formValidation({
         message: 'This value is not valid',
