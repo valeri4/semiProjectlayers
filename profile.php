@@ -141,23 +141,27 @@ vd($_SESSION['uuID']);
             <textarea class="form-control" rows="5" id="about" name="about">
             </textarea>
         </div>
-        <h3>Change Password</h3>
-        <hr>
-        <div class="form-group">
-            <label for="pwd">New Password:</label>
-            <input type="password" class="form-control" id="pwd" name="password">
-        </div>
-        <div class="form-group">
-            <label for="repwd">Re-Enter New Password:</label>
-            <input type="password" class="form-control" id="repwd" name="confirmPassword">
-        </div>
 
         <button type="submit" class="btn btn-default">Save</button>
-
     </form>
+    <h3>Change Password</h3>
+    <hr>
+    <form role="form" id="changePassword">
+    <div class="form-group">
+        <label for="pwd">New Password:</label>
+        <input type="password" class="form-control" id="pwd" name="password">
+    </div>
+    <div class="form-group">
+        <label for="repwd">Re-Enter New Password:</label>
+        <input type="password" class="form-control" id="repwd" name="confirmPassword">
+    </div>
+
+    <button type="submit" class="btn btn-default">Change Password</button>
+
+</form>
 
 
-    <?php
+<?php
 
-    include_once 'includes/footer.php';
-    ?>
+include_once 'includes/footer.php';
+?>

@@ -20,7 +20,7 @@ $(function () {
             $('#bdayCalendar').val(userData.date);
             $('#about').val(userData.about);
 
-            if (userData.gender == 'male') {
+            if (userData.gender == '1') {
                 $('#male').prop('checked', true);
             } else {
                 $('#female').prop('checked', true);
@@ -83,6 +83,60 @@ $(function () {
                     date: {
                         format: 'DD/MM/YYYY',
                         message: 'The date is not a valid'
+                    }
+                }
+            }
+        }
+    }).on('success.form.fv', function (e) {
+        // Prevent form submission
+        e.preventDefault();
+
+        var $form = $(e.target),
+                fv = $(e.target).data('formValidation');
+
+
+        $.ajax({
+            url: 'users/usersAPI.php?command=update_user_profile',
+            type: 'POST',
+            data: $form.serialize(),
+            success: function (result) {
+                //If Registration passed -> redirect to index.php
+                if (result == 1) {
+                    window.location.href = "index.php";
+                }
+            }
+        });
+    });
+
+
+    $('#changePassword').formValidation({
+        message: 'This value is not valid',
+        live: 'disabled',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            password: {
+                validators: {
+                    notEmpty: {
+                        message: 'The password is required and can\'t be empty'
+                    },
+                    different: {
+                        field: 'username',
+                        message: 'The password can\'t be the same as username'
+                    }
+                }
+            },
+            confirmPassword: {
+                validators: {
+                    notEmpty: {
+                        message: 'The confirm password is required and can\'t be empty'
+                    },
+                    identical: {
+                        field: 'password',
+                        message: 'The password and its confirm are not the same'
                     }
                 }
             }

@@ -46,10 +46,9 @@ switch ($command) {
     case 'update_user_profile':
         $firstName = $_POST['firstName'];
         $lastName = $_POST['lastName'];
-        $password = $_POST['password'];
         $about = $_POST['about'];
         $date = $_POST['date'];
         $gender = $_POST['gender'];
-        echo updte_user_profile($firstName, $lastName, $password, $date, $gender, $about);
+        echo update_user_profile($firstName, $lastName, $date, $gender, $about);
         break;
 }

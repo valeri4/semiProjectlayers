@@ -2,11 +2,11 @@
 
 require_once '../includes/DAL.php';
 require_once '../includes/helpers.php'; //Includes Session Functions
+
+session_start();
+
 //Start Session after LogIn or Registration
-
 function session_write($userSession) {
-
-    session_start();
 
     $_SESSION['auth'] = true;
     $_SESSION['uuID'] = $userSession->uuid;
@@ -166,8 +166,6 @@ function log_in($email, $user_password) {
 
 function view_user_profile() {
 
-    session_start();
-
     if (!isset($_SESSION['uuID'])) {
         return 'user not logged ';
     }
@@ -183,23 +181,23 @@ function view_user_profile() {
     ));
 }
 
-function updte_user_profile($firstName, $lastName, $password, $date, $gender, $about) {
+function update_user_profile($firstName, $lastName, $date, $gender, $about) {
+
+    $uuID = $_SESSION['uuID'];
+
     //gender convert
     if ($gender == "male") {
         $gender = 1;
     } else {
         $gender = 0;
     }
-    //generate UUID
-    $uuid = uniqid(rand(), true);
+
     //Date convert to SQl format
     $date = date("Y-m-d", strtotime(str_replace('/', '-', $date)));
-    //Password encryption
-    $password = password_hash($password, PASSWORD_DEFAULT);
 
     $connection = connect();
-    $ps = $connection->prepare("insert into users (u_uID, u_email, u_pwd, u_f_name, u_l_name, u_b_day, u_gender, u_userName) values( ?, ?, ?, ?, ?, ?, ?, ?) ");
-    $ps->bind_param("ssssssis", $uuid, $email, $password, $firstName, $lastName, $date, $gender, $username);
+    $ps = $connection->prepare("UPDATE users SET u_f_name=?, u_l_name=?, u_b_day=?, u_about=?, u_gender=? WHERE u_uId=? ");
+    $ps->bind_param("ssssis", $firstName, $lastName, $date, $about, $gender, $uuID);
     $ps->execute();
     $ps->close();
     $connection->close();
@@ -207,18 +205,43 @@ function updte_user_profile($firstName, $lastName, $password, $date, $gender, $a
     //Custom date Formating d/m/Y function from helpers.php
     $date = dateFormat($date);
 
-    $userSession = new stdClass();
-    $userSession->uuid = $uuid;
-    $userSession->email = $email;
-    $userSession->firstName = $firstName;
-    $userSession->lastName = $lastName;
-    $userSession->date = $date;
-    $userSession->gender = $gender;
-    $userSession->username = $username;
-    $userSession->about = $about;
-
-    //Add userData to Session
-    session_write($userSession);
+    $_SESSION['firstName'] = $firstName;
+    $_SESSION['lastName'] = $lastName;
+    $_SESSION['date'] = $date;
+    $_SESSION['gender'] = $gender;
+    $_SESSION['about'] = $about;
 
     return TRUE;
 }
+
+function password_update($old_password, $new_password) {
+
+    $uuID = $_SESSION['uuID'];
+
+    $connection = connect();
+
+    //Get current password
+    $ps = $connection->prepare("select u_pwd from users WHERE u_uId=? LIMIT 1");
+    $ps->bind_param("s", $uuID); //string
+    $ps->execute();
+    $ps->bind_result($password);
+    $ps->fetch();
+
+    if (!password_verify($old_password, $password)) {
+        return "password";
+    }
+
+    $new_password = password_hash($new_password, PASSWORD_DEFAULT);
+
+    $ps = $connection->prepare("UPDATE users SET u_pwd=? WHERE u_uId=? ");
+    $ps->bind_param("ss", $new_password ,$uuID);
+    $ps->execute();
+    $ps->close();
+    $connection->close();
+
+
+
+    return TRUE;
+}
+
+var_dump(password_update(1234, 5555));
