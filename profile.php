@@ -147,21 +147,25 @@ vd($_SESSION['uuID']);
     <h3>Change Password</h3>
     <hr>
     <form role="form" id="changePassword">
-    <div class="form-group">
-        <label for="pwd">New Password:</label>
-        <input type="password" class="form-control" id="pwd" name="password">
-    </div>
-    <div class="form-group">
-        <label for="repwd">Re-Enter New Password:</label>
-        <input type="password" class="form-control" id="repwd" name="confirmPassword">
-    </div>
+        <div class="form-group">
+            <label for="old_password">Old Password:</label>
+            <input type="password" class="form-control" id="old_password" name="old_password">
+        </div>
+        <div class="form-group">
+            <label for="pwd">New Password:</label>
+            <input type="password" class="form-control" id="pwd" name="password">
+        </div>
+        <div class="form-group">
+            <label for="repwd">Re-Enter New Password:</label>
+            <input type="password" class="form-control" id="repwd" name="confirmPassword">
+        </div>
 
-    <button type="submit" class="btn btn-default">Change Password</button>
+        <button type="submit" class="btn btn-default">Change Password</button>
 
-</form>
+    </form>
 
 
-<?php
+    <?php
 
-include_once 'includes/footer.php';
-?>
+    include_once 'includes/footer.php';
+    ?>

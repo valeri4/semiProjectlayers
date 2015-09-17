@@ -54,6 +54,9 @@ $(function () {
             },
             password: {
                 validators: {
+                    notEmpty: {
+                        message: 'The password is required and can\'t be empty'
+                    },
                     different: {
                         field: 'username',
                         message: 'The password can\'t be the same as username'
@@ -62,6 +65,9 @@ $(function () {
             },
             confirmPassword: {
                 validators: {
+                    notEmpty: {
+                        message: 'The password is required and can\'t be empty'
+                    },
                     identical: {
                         field: 'password',
                         message: 'The password and its confirm are not the same'
@@ -118,6 +124,13 @@ $(function () {
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {
+            old_password: {
+                validators: {
+                    notEmpty: {
+                        message: 'The old password is required and cannot be empty'
+                    }
+                }
+            },
             password: {
                 validators: {
                     notEmpty: {

@@ -226,6 +226,7 @@ function password_update($old_password, $new_password) {
     $ps->execute();
     $ps->bind_result($password);
     $ps->fetch();
+    $ps->close();
 
     if (!password_verify($old_password, $password)) {
         return "password";
@@ -244,4 +245,4 @@ function password_update($old_password, $new_password) {
     return TRUE;
 }
 
-var_dump(password_update(1234, 5555));
+//var_dump(password_update(1234, 5555));

@@ -41,8 +41,8 @@ switch ($command) {
     case 'get_user_profile':
         echo view_user_profile();
         break;
-    
-        //Registration new user
+
+    //Registration new user
     case 'update_user_profile':
         $firstName = $_POST['firstName'];
         $lastName = $_POST['lastName'];
@@ -50,5 +50,11 @@ switch ($command) {
         $date = $_POST['date'];
         $gender = $_POST['gender'];
         echo update_user_profile($firstName, $lastName, $date, $gender, $about);
+        break;
+
+    case 'password_update':
+        $old_password = $_POST['email_login'];
+        $new_password = $_POST['pwd_login'];
+        echo password_update($old_password, $new_password);
         break;
 }
