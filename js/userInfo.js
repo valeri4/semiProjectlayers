@@ -1,7 +1,7 @@
 $(function () {
 
 
-    //Get User Profile Data
+//Get User Profile Data
     $.ajax({
         type: 'GET',
         url: "users/usersAPI.php",
@@ -12,14 +12,12 @@ $(function () {
         success: function (userData) {
             userData = JSON.parse(userData);
             console.dir(userData);
-
             $('#username').val(userData.username);
             $('#firstName').val(userData.firstName);
             $('#lastName').val(userData.lastName);
             $('#email').val(userData.email);
             $('#bdayCalendar').val(userData.date);
             $('#about').val(userData.about);
-
             if (userData.gender == '1') {
                 $('#male').prop('checked', true);
             } else {
@@ -27,11 +25,10 @@ $(function () {
             }
         }
     });
-
     //UserInfo Validation
     $('#userInfo').formValidation({
         message: 'This value is not valid',
-        live: 'disabled',
+        // live: 'disabled',
         icon: {
             valid: 'glyphicon glyphicon-ok',
             invalid: 'glyphicon glyphicon-remove',
@@ -40,6 +37,11 @@ $(function () {
         fields: {
             firstName: {
                 validators: {
+                    stringLength: {
+                        min: 3,
+                        max: 20,
+                        message: 'Please enter value between %s and %s characters long'
+                    },
                     notEmpty: {
                         message: 'The first name is required and cannot be empty'
                     }
@@ -47,30 +49,13 @@ $(function () {
             },
             lastName: {
                 validators: {
+                    stringLength: {
+                        min: 3,
+                        max: 20,
+                        message: 'Please enter value between %s and %s characters long'
+                    },
                     notEmpty: {
                         message: 'The last name is required and cannot be empty'
-                    }
-                }
-            },
-            password: {
-                validators: {
-                    notEmpty: {
-                        message: 'The password is required and can\'t be empty'
-                    },
-                    different: {
-                        field: 'username',
-                        message: 'The password can\'t be the same as username'
-                    }
-                }
-            },
-            confirmPassword: {
-                validators: {
-                    notEmpty: {
-                        message: 'The password is required and can\'t be empty'
-                    },
-                    identical: {
-                        field: 'password',
-                        message: 'The password and its confirm are not the same'
                     }
                 }
             },
@@ -91,16 +76,20 @@ $(function () {
                         message: 'The date is not a valid'
                     }
                 }
+            },
+            about: {
+                validators: {
+                    notEmpty: {
+                        message: 'The About is required and cannot be empty'
+                    }
+                }
             }
         }
     }).on('success.form.fv', function (e) {
-        // Prevent form submission
+// Prevent form submission
         e.preventDefault();
-
         var $form = $(e.target),
                 fv = $(e.target).data('formValidation');
-
-
         $.ajax({
             url: 'users/usersAPI.php?command=update_user_profile',
             type: 'POST',
@@ -113,11 +102,9 @@ $(function () {
             }
         });
     });
-
-
     $('#changePassword').formValidation({
         message: 'This value is not valid',
-        live: 'disabled',
+       // live: 'disabled',
         icon: {
             valid: 'glyphicon glyphicon-ok',
             invalid: 'glyphicon glyphicon-remove',
@@ -155,15 +142,12 @@ $(function () {
             }
         }
     }).on('success.form.fv', function (e) {
-        // Prevent form submission
+// Prevent form submission
         e.preventDefault();
-
         var $form = $(e.target),
                 fv = $(e.target).data('formValidation');
-
-
         $.ajax({
-            url: 'users/use',
+            url: 'users/usersAPI.php?command=password_update',
             type: 'POST',
             data: $form.serialize(),
             success: function (result) {

@@ -25,6 +25,7 @@ function session_write($userSession) {
 
 //Check if userName exist
 function check_reg_nickName($user_name) {
+
     $connection = connect();
     $ps = $connection->prepare("select u_userName from users WHERE u_userName=? LIMIT 1");
     $ps->bind_param("s", $user_name); //string
@@ -41,9 +42,7 @@ function check_reg_nickName($user_name) {
         $isAvailable = true;
     }
 
-    return json_encode(array(
-        'valid' => $isAvailable,
-    ));
+    return $isAvailable;
 }
 
 //Check if Email exist
@@ -63,13 +62,23 @@ function check_reg_email($email) {
         $isAvailable = true;
     }
 
-    return json_encode(array(
-        'valid' => $isAvailable,
-    ));
+    return $isAvailable;
 }
 
 //Registration New User
 function registration($username, $firstName, $lastName, $password, $email, $date, $gender) {
+    
+    
+    //Check another time email and username if exist. 
+    //If somebody sent registration request don't through front end
+    if(!check_reg_nickName($username)){
+        return 0;
+    }
+    
+    if(!check_reg_email($email)){
+        return 0;
+    }
+    
 
     //gender convert
     if ($gender == "male") {
@@ -93,7 +102,9 @@ function registration($username, $firstName, $lastName, $password, $email, $date
 
     //Custom date Formating d/m/Y function from helpers.php
     $date = dateFormat($date);
-
+    
+    $about = '';
+    
     $userSession = new stdClass();
     $userSession->uuid = $uuid;
     $userSession->email = $email;
@@ -124,12 +135,12 @@ function log_in($email, $user_password) {
 
     //if Email wrong return "email" to front End
     if (!$email) {
-        return "email";
+        return 0;
     }
 
     //If Password wrong return "password" to front End
     if (!password_verify($user_password, $password)) {
-        return "password";
+        return 0;
     }
 
     if ($gender == 1) {

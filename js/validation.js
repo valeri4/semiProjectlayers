@@ -17,6 +17,11 @@ $(function () {
             username: {
                 message: 'The username is not valid',
                 validators: {
+                    stringLength: {
+                        min: 3,
+                        max: 20,
+                        message: 'Please enter value between %s and %s characters long'
+                    },
                     notEmpty: {
                         message: 'The username is required and can\'t be empty'
                     },
@@ -29,6 +34,11 @@ $(function () {
             },
             firstName: {
                 validators: {
+                    stringLength: {
+                        min: 3,
+                        max: 20,
+                        message: 'Please enter value between %s and %s characters long'
+                    },
                     notEmpty: {
                         message: 'The first name is required and cannot be empty'
                     }
@@ -36,6 +46,11 @@ $(function () {
             },
             lastName: {
                 validators: {
+                    stringLength: {
+                        min: 3,
+                        max: 20,
+                        message: 'Please enter value between %s and %s characters long'
+                    },
                     notEmpty: {
                         message: 'The last name is required and cannot be empty'
                     }
@@ -58,6 +73,11 @@ $(function () {
             },
             password: {
                 validators: {
+                    stringLength: {
+                        min: 8,
+                        max: 16,
+                        message: 'Please enter value between %s and %s characters long'
+                    },
                     notEmpty: {
                         message: 'The password is required and can\'t be empty'
                     },
@@ -98,13 +118,10 @@ $(function () {
             }
         }
     }).on('success.form.fv', function (e) {
-        // Prevent form submission
+// Prevent form submission
         e.preventDefault();
-
         var $form = $(e.target),
                 fv = $(e.target).data('formValidation');
-
-
         $.ajax({
             url: 'users/usersAPI.php?command=registration',
             type: 'POST',
@@ -117,8 +134,6 @@ $(function () {
             }
         });
     });
-
-
     /**************************************/
     /* Custom Login Form Validation      */
     /*************************************/
@@ -128,12 +143,10 @@ $(function () {
     var fieldId, errMsg = '';
     var emailErrFlag = false;
     var passErrFlag = false;
-
-
     //Adding Bootstrap Error Class 
     function addErrorClass(fieldId, errMsg) {
         $('#' + fieldId).parent().addClass("has-error has-feedback");
-        $('<span class="glyphicon glyphicon-remove form-control-feedback"></span>').insertAfter('#' + fieldId);
+        //  $('<span class="glyphicon glyphicon-remove form-control-feedback"></span>').insertAfter('#' + fieldId);
         $('<small class="help-block"  style="display: block;">' + errMsg + '</small>').insertAfter('#' + fieldId + ':last');
     }
 
@@ -164,19 +177,10 @@ $(function () {
             success: function (data) {
                 if (data)
                 {
-                    //If wrong Email -> Add bootstrap error to field
-                    if (data == 'email') {
-                        fieldId = 'email_login';
-                        errMsg = 'Wrong Email!';
-                        if (!emailErrFlag) {
-                            addErrorClass(fieldId, errMsg);
-                            emailErrFlag = true;
-                        }
-                    }
-                    //If wrong Password -> Add bootstrap error to field
-                    if (data == 'password') {
+                    //If Password or Email wrong -> Add bootstrap error to field
+                    if (data == 0) {
                         fieldId = 'pwd_login';
-                        errMsg = 'Wrong Password';
+                        errMsg = 'Wrong Email or Password';
                         if (!passErrFlag) {
                             addErrorClass(fieldId, errMsg);
                             passErrFlag = true;
@@ -190,15 +194,12 @@ $(function () {
             }
         });
     });
-
-
     //If User press Enter on the login form -> Execute Submit
     $('#formLogIn').keypress(function (e) {
         if (e.keyCode == 13) {
             $('#logInSubmit').click();
         }
     });
-
     //If email was wrong and user start typing -> Remove Bootstrap error class  
     $('#email_login').keydown(function () {
         if (emailErrFlag) {
@@ -206,7 +207,6 @@ $(function () {
             emailErrFlag = false;
         }
     });
-
     //If password was wrong and user start typing -> Remove Bootstrap error class
     $('#pwd_login').keydown(function () {
         if (passErrFlag) {
