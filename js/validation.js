@@ -1,5 +1,17 @@
 
 $(function () {
+    
+     $('#datePicker')
+            .datepicker({
+                format: 'dd/mm/yyyy',
+                startDate: '-80y',
+                endDate: '-16y'
+            })
+            .on('changeDate', function (e) {
+                // Revalidate the date field
+                $('#eventForm').formValidation('revalidateField', 'date');
+            });
+
 
     /********************************
      * Registration Form Validation *
@@ -141,7 +153,7 @@ $(function () {
     var email_logIn = $('#email_login');
     var pwd_logIn = $('#pwd_login');
     var fieldId, errMsg = '';
-    var emailErrFlag = false;
+ //   var emailErrFlag = false;
     var passErrFlag = false;
     //Adding Bootstrap Error Class 
     function addErrorClass(fieldId, errMsg) {
@@ -200,13 +212,13 @@ $(function () {
             $('#logInSubmit').click();
         }
     });
-    //If email was wrong and user start typing -> Remove Bootstrap error class  
-    $('#email_login').keydown(function () {
-        if (emailErrFlag) {
-            removeErrorClass('email_login');
-            emailErrFlag = false;
-        }
-    });
+//    //If email was wrong and user start typing -> Remove Bootstrap error class  
+//    $('#email_login').keydown(function () {
+//        if (emailErrFlag) {
+//            removeErrorClass('email_login');
+//            emailErrFlag = false;
+//        }
+//    });
     //If password was wrong and user start typing -> Remove Bootstrap error class
     $('#pwd_login').keydown(function () {
         if (passErrFlag) {

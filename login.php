@@ -93,7 +93,7 @@
                                                         <div class="form-group">
                                                             <label for="datepicker">Birth date:</label>
                                                             <div class="input-group input-append date" id="datePicker">
-                                                                <input type="text" class="form-control" name="date" />
+                                                                <input type="text" class="form-control" name="date"/>
                                                                 <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
                                                             </div>  
                                                         </div>
@@ -132,11 +132,11 @@
         </div>
 
         <!-- script references -->
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+        <script src="js/lib/jquery.js" type="text/javascript"></script>
         <script src="js/lib/bootstrap.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
+        <script src="js/lib/bootstrap-datepicker_1.3.0_js_bootstrap-datepicker.min.js" type="text/javascript"></script>
         <script src="js/lib/formValidation.min.js" type="text/javascript"></script>
-        <script src="js/lib/bootstrap.js" type="text/javascript"></script>
+        <script src="js/lib/bootstrap.FormValidation.js" type="text/javascript"></script>
         <script src="js/validation.js" type="text/javascript"></script>
         <script src="js/scripts.js"></script>
     </body>

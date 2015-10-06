@@ -1,5 +1,16 @@
 $(function () {
 
+    $('#datePicker')
+            .datepicker({
+                format: 'dd/mm/yyyy',
+                startDate: '-80y',
+                endDate: '-16y'
+            })
+            .on('changeDate', function (e) {
+                // Revalidate the date field
+                $('#eventForm').formValidation('revalidateField', 'date');
+            });
+
 
 //Get User Profile Data
     $.ajax({
@@ -102,17 +113,39 @@ $(function () {
             }
         });
     });
+
+    var passErrFlag = false;
+
+    function addErrorClass() {
+        $('#old_password').parent().removeClass('has-success').addClass("has-error has-feedback");
+        //  $('<span class="glyphicon glyphicon-remove form-control-feedback"></span>').insertAfter('#' + fieldId);
+        $('<small class="help-block"  style="display: block;">Wrong Old password</small>').insertAfter('#old_password:last');
+    }
+
+    //Remove Bootstrap Error Class 
+    function removeErrorClass() {
+        $('#old_password').parent().removeClass("has-error has-feedback");
+        $('#old_password').next().remove();
+        $('#old_password').next().remove();
+    }
+
+
     $('#changePassword').formValidation({
         message: 'This value is not valid',
-       // live: 'disabled',
-        icon: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
+        // live: 'disabled',
+//        icon: {
+//            valid: 'glyphicon glyphicon-ok',
+//            invalid: 'glyphicon glyphicon-remove',
+//            validating: 'glyphicon glyphicon-refresh'
+//        },
         fields: {
             old_password: {
                 validators: {
+                    stringLength: {
+                        min: 8,
+                        max: 16,
+                        message: 'Please enter value between %s and %s characters long'
+                    },
                     notEmpty: {
                         message: 'The old password is required and cannot be empty'
                     }
@@ -120,6 +153,11 @@ $(function () {
             },
             password: {
                 validators: {
+                    stringLength: {
+                        min: 8,
+                        max: 16,
+                        message: 'Please enter value between %s and %s characters long'
+                    },
                     notEmpty: {
                         message: 'The password is required and can\'t be empty'
                     },
@@ -155,7 +193,21 @@ $(function () {
                 if (result == 1) {
                     window.location.href = "index.php";
                 }
+                if (result == 'password') {
+                    //If Password or Email wrong -> Add bootstrap error to field
+                    if (!passErrFlag) {
+                        addErrorClass();
+                        passErrFlag = true;
+                    }
+                }
             }
         });
+    });
+
+    $('#old_password').keydown(function () {
+        if (passErrFlag) {
+            removeErrorClass();
+            passErrFlag = false;
+        }
     });
 });

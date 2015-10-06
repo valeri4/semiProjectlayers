@@ -19,6 +19,9 @@ switch ($command) {
         ));
 
         break;
+    
+    
+    
 
     //Registration Email check if exist
     case 'email':
@@ -31,6 +34,9 @@ switch ($command) {
         ));
 
         break;
+    
+    
+    
 
     // http://localhost/SemiProjectLayers/users/usersAPI.php?command=registration&username=asdf&firstName=bla&lastName=foo&password=12345678&confirmPassword=12345678&email=vvv@dfdfd.com&date=15/12/2015&gender=male
     //Registration new user
@@ -43,7 +49,6 @@ switch ($command) {
         $username_length = strlen($username);
         if ($username_length < 3 || $username_length > 20) {
             redirect('../error.php');
-            echo 'user';
             break;
         }
 
@@ -53,7 +58,6 @@ switch ($command) {
         $firstName_length = strlen($firstName);
         if ($firstName_length < 3 || $firstName_length > 20) {
             redirect('../error.php');
-            echo 'first';
             break;
         }
 
@@ -64,7 +68,6 @@ switch ($command) {
         $lastName_length = strlen($lastName);
         if ($lastName_length < 3 || $lastName_length > 20) {
             redirect('../error.php');
-            echo 'last';
             break;
         }
 
@@ -74,7 +77,6 @@ switch ($command) {
         $password_length = strlen($password);
         if ($password_length < 8) {
             redirect('../error.php');
-            echo 'pass length';
             break;
         }
 
@@ -84,7 +86,6 @@ switch ($command) {
 
         if (strcmp($password, $confirmPassword) != 0) {
             redirect('../error.php');
-            echo 'pass_confirm';
             break;
         }
 
@@ -94,7 +95,6 @@ switch ($command) {
         $email = strip_tags($email);
         if (preg_match("/^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+){1,4}$/", $email) == false) {
             redirect('../error.php');
-            echo 'mail';
             break;
         }
 
@@ -102,8 +102,7 @@ switch ($command) {
         $date = addslashes($date);
         $date = addslashes($date);
         if (preg_match('/([0-2]\d|3[0-1])\/(0\d|1[0-2])\/(19|20)\d{2}/', $date) == false) {
-            //redirect('../error.php');
-            echo 'date';
+            redirect('../error.php');
             break;
         }
 
@@ -113,7 +112,6 @@ switch ($command) {
         if (strcmp($gender, 'male') != 0) {
             if (strcmp($gender, 'female') != 0) {
                 redirect('../error.php');
-                echo 'gender';
                 break;
             }
         }
@@ -128,17 +126,25 @@ switch ($command) {
         echo $registration_result;
         break;
 
+        
+        
     //LogIn exist user
     case 'login':
         $email = $_POST['email_login'];
         $user_password = $_POST['pwd_login'];
         echo log_in($email, $user_password);
         break;
+    
+    
+    
 
     //View User Profile
     case 'get_user_profile':
         echo view_user_profile();
         break;
+    
+    
+    
 
     //Update User Profile
     case 'update_user_profile':
@@ -149,10 +155,44 @@ switch ($command) {
         $gender = $_POST['gender'];
         echo update_user_profile($firstName, $lastName, $date, $gender, $about);
         break;
+    
+    
+    
+    
 
     case 'password_update':
+
         $old_password = $_POST['old_password'];
-        $new_password = $_POST['password'];
-        echo password_update($old_password, $new_password);
+        $old_password = addslashes($old_password);
+        $old_password = strip_tags($old_password);
+        $password_length = strlen($old_password);
+        if ($password_length < 8) {
+            redirect('../error.php');
+            break;
+        }
+
+        $password = $_POST['password'];
+        $password = addslashes($password);
+        $password = strip_tags($password);
+        $password_length = strlen($password);
+        if ($password_length < 8) {
+            redirect('../error.php');
+            break;
+        }
+
+        $confirmPassword = $_POST['confirmPassword'];
+        $confirmPassword = addslashes($confirmPassword);
+        $confirmPassword = strip_tags($confirmPassword);
+
+        if (strcmp($password, $confirmPassword) != 0) {
+            redirect('../error.php');
+            break;
+        }
+
+        $password_update_result = password_update($old_password, $password);
+        if ($password_update_result == false) {
+            redirect('../error.php');
+        }
+        echo $password_update_result;
         break;
 }

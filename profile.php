@@ -1,5 +1,4 @@
 <?php
-
 include_once 'includes/global.php';
 include_once 'includes/auth.php';
 include_once 'includes/header.php';
@@ -81,7 +80,11 @@ include_once 'includes/header.php';
 
 vd($_SESSION['uuID']);
 ?>
-
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css" />
+<link href="css/formValidation.min.css" rel="stylesheet" type="text/css"/>
+<script src="js/lib/bootstrap-datepicker_1.3.0_js_bootstrap-datepicker.min.js" type="text/javascript"></script>
+<script src="js/lib/formValidation.min.js" type="text/javascript"></script>
+<script src="js/lib/bootstrap.FormValidation.js" type="text/javascript"></script>
 <script src="js/userInfo.js"></script>
 
 <div class="col-sm-3">
@@ -147,17 +150,17 @@ vd($_SESSION['uuID']);
     <h3>Change Password</h3>
     <hr>
     <form role="form" id="changePassword">
-        <div class="form-group">
+        <div class="form-group pass">
             <label for="old_password">Old Password:</label>
             <input type="password" class="form-control" id="old_password" name="old_password">
         </div>
         <div class="form-group">
             <label for="pwd">New Password:</label>
-            <input type="password" class="form-control" id="pwd" name="password">
+            <input type="password" class="form-control" id="password" name="password">
         </div>
         <div class="form-group">
             <label for="repwd">Re-Enter New Password:</label>
-            <input type="password" class="form-control" id="repwd" name="confirmPassword">
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
         </div>
 
         <button type="submit" class="btn btn-default">Change Password</button>
@@ -166,6 +169,5 @@ vd($_SESSION['uuID']);
 
 
     <?php
-
     include_once 'includes/footer.php';
     ?>

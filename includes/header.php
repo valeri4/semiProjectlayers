@@ -7,10 +7,9 @@
         <meta name="generator" content="Bootply" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="css/bootstrap.3.5.min.css" rel="stylesheet" type="text/css"/>
         <link href="css/formValidation.min.css" rel="stylesheet" type="text/css"/>
         <link href="css/jquery-ui.css" rel="stylesheet" type="text/css"/>
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css" />
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css" />
         <!--[if lt IE 9]>
             <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
@@ -18,20 +17,10 @@
         
         
         <!-- script references -->
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+        <script src="js/lib/jquery.js" type="text/javascript"></script>
         <script src="js/lib/bootstrap.min.js"></script>
         <script src="js/lib/jquery-ui.js" type="text/javascript"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
-        <script src="js/lib/formValidation.min.js" type="text/javascript"></script>
-        <script src="js/lib/bootstrap.js" type="text/javascript"></script>
-        <script src="js/validation.js" type="text/javascript"></script>
-        <script src="js/userPosts.js" type="text/javascript"></script>
         <script src="js/scripts.js"></script>
-        <script src="js/aboutMe.js" type="text/javascript"></script>
-        <script src="js/removeEditPosts.js" type="text/javascript"></script>
-        <script src="js/lib/jquery.visible.min.js" type="text/javascript"></script>
-        <script src="js/loadPosts.js" type="text/javascript"></script>
-        <script src="js/friendAutocomplete.js" type="text/javascript"></script>
     </head>
     <body>
         <div class="wrapper">

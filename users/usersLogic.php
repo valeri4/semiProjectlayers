@@ -67,18 +67,18 @@ function check_reg_email($email) {
 
 //Registration New User
 function registration($username, $firstName, $lastName, $password, $email, $date, $gender) {
-    
-    
+
+
     //Check another time email and username if exist. 
     //If somebody sent registration request don't through front end
-    if(!check_reg_nickName($username)){
+    if (!check_reg_nickName($username)) {
         return 0;
     }
-    
-    if(!check_reg_email($email)){
+
+    if (!check_reg_email($email)) {
         return 0;
     }
-    
+
 
     //gender convert
     if ($gender == "male") {
@@ -102,9 +102,9 @@ function registration($username, $firstName, $lastName, $password, $email, $date
 
     //Custom date Formating d/m/Y function from helpers.php
     $date = dateFormat($date);
-    
+
     $about = '';
-    
+
     $userSession = new stdClass();
     $userSession->uuid = $uuid;
     $userSession->email = $email;
@@ -194,6 +194,10 @@ function view_user_profile() {
 
 function update_user_profile($firstName, $lastName, $date, $gender, $about) {
 
+    if (!$_SESSION['auth']) {
+        return false;
+    }
+    
     $uuID = $_SESSION['uuID'];
 
     //gender convert
@@ -227,6 +231,10 @@ function update_user_profile($firstName, $lastName, $date, $gender, $about) {
 
 function password_update($old_password, $new_password) {
 
+    if (!$_SESSION['auth']) {
+        return false;
+    }
+
     $uuID = $_SESSION['uuID'];
 
     $connection = connect();
@@ -246,12 +254,10 @@ function password_update($old_password, $new_password) {
     $new_password = password_hash($new_password, PASSWORD_DEFAULT);
 
     $ps = $connection->prepare("UPDATE users SET u_pwd=? WHERE u_uId=? ");
-    $ps->bind_param("ss", $new_password ,$uuID);
+    $ps->bind_param("ss", $new_password, $uuID);
     $ps->execute();
     $ps->close();
     $connection->close();
-
-
 
     return TRUE;
 }
