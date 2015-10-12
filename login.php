@@ -1,3 +1,13 @@
+<?php
+require_once './includes/helpers.php';
+
+if ($_SESSION['auth']) {
+    redirect('index.php');
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -57,6 +67,11 @@
                                                     <div class="form-group">
                                                         <label for="pwd_login">Password:</label>
                                                         <input type="password" class="form-control" id="pwd_login" name="pwd_login">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>
+                                                            <input type="checkbox" id="remember_me" name="remember_me"> Remember Me
+                                                        </label>
                                                     </div>
                                                     <button type="button" class="btn btn-default" id="logInSubmit">Sign In</button>
                                                     <img src="img/ajax-loader.gif" alt="loading..." class="loading" id="loader"/>

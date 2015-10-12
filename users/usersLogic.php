@@ -1,23 +1,11 @@
 <?php
 
-require_once '../includes/DAL.php';
-require_once '../includes/helpers.php'; //Includes Session Functions
+require_once (__DIR__.'/../includes/DAL.php');
+require_once (__DIR__.'/../includes/helpers.php'); //Includes Session Functions
+require_once 'autoLogin.php'; //Includes User Cookies functions
 
 session_start();
 
-//Start Session after LogIn or Registration
-function session_write($userSession) {
-
-    $_SESSION['auth'] = true;
-    $_SESSION['uuID'] = $userSession->uuid;
-    $_SESSION['email'] = $userSession->email;
-    $_SESSION['firstName'] = $userSession->firstName;
-    $_SESSION['lastName'] = $userSession->lastName;
-    $_SESSION['date'] = $userSession->date;
-    $_SESSION['gender'] = $userSession->gender;
-    $_SESSION['username'] = $userSession->username;
-    $_SESSION['about'] = $userSession->about;
-}
 
 /* * *********************
   Registration Block
@@ -97,6 +85,7 @@ function registration($username, $firstName, $lastName, $password, $email, $date
     $ps = $connection->prepare("insert into users (u_uID, u_email, u_pwd, u_f_name, u_l_name, u_b_day, u_gender, u_userName) values( ?, ?, ?, ?, ?, ?, ?, ?) ");
     $ps->bind_param("ssssssis", $uuid, $email, $password, $firstName, $lastName, $date, $gender, $username);
     $ps->execute();
+    $u_id = $ps->insert_id;
     $ps->close();
     $connection->close();
 
@@ -106,6 +95,7 @@ function registration($username, $firstName, $lastName, $password, $email, $date
     $about = '';
 
     $userSession = new stdClass();
+    $userSession->u_id = $u_id;
     $userSession->uuid = $uuid;
     $userSession->email = $email;
     $userSession->firstName = $firstName;
@@ -115,8 +105,10 @@ function registration($username, $firstName, $lastName, $password, $email, $date
     $userSession->username = $username;
     $userSession->about = $about;
 
-    //Add userData to Session
+    //Add userData to Session helpers.php
     session_write($userSession);
+
+    set_user_cookies($u_id, $username, $email);
 
     return TRUE;
 }
@@ -125,13 +117,15 @@ function registration($username, $firstName, $lastName, $password, $email, $date
   LogIn Block
  * ********************* */
 
-function log_in($email, $user_password) {
+function log_in($email, $user_password, $remember_me) {
+
     $connection = connect();
-    $ps = $connection->prepare("select u_uID, u_email, u_pwd, u_f_name, u_l_name, u_b_day, u_gender, u_userName, u_about from users WHERE u_email=? LIMIT 1");
+    $ps = $connection->prepare("select u_id, u_uID, u_email, u_pwd, u_f_name, u_l_name, u_b_day, u_gender, u_userName, u_about from users WHERE u_email=? LIMIT 1");
     $ps->bind_param("s", $email); //string
     $ps->execute();
-    $ps->bind_result($uuid, $email, $password, $firstName, $lastName, $date, $gender, $username, $about);
+    $ps->bind_result($u_id, $uuid, $email, $password, $firstName, $lastName, $date, $gender, $username, $about);
     $ps->fetch();
+
 
     //if Email wrong return "email" to front End
     if (!$email) {
@@ -153,6 +147,7 @@ function log_in($email, $user_password) {
     $date = dateFormat($date);
 
     $userSession = new stdClass();
+    $userSession->u_id = $u_id;
     $userSession->uuid = $uuid;
     $userSession->email = $email;
     $userSession->firstName = $firstName;
@@ -162,14 +157,21 @@ function log_in($email, $user_password) {
     $userSession->username = $username;
     $userSession->about = $about;
 
-    //Add userData to Session
+    //Add userData to Session helpers.php
     session_write($userSession);
 
     $ps->close();
     $connection->close();
 
+    //If User checked 'Remember me' -> Set Cookies
+    if($remember_me == 'true') {
+        update_user_cookies($u_id, $username, $email);
+    }
+    
     return TRUE;
 }
+
+//var_dump(log_in('fff@ddd.com', 12345678));
 
 /* * *********************
   User Profile
@@ -197,7 +199,7 @@ function update_user_profile($firstName, $lastName, $date, $gender, $about) {
     if (!$_SESSION['auth']) {
         return false;
     }
-    
+
     $uuID = $_SESSION['uuID'];
 
     //gender convert

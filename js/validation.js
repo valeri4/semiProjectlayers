@@ -172,13 +172,19 @@ $(function () {
 
     //Email & Password Validation 
     $('#logInSubmit').click(function () {
+           
+           
+           var rememberMeFlag = false;
+           if($('#remember_me').is(':checked')){
+               rememberMeFlag = true;
+           }
 
         //  var dataString = 'email_login=' + email_logIn.val() + '&pwd_login=' + pwd_logIn.val();
 
         $.ajax({
             type: "POST",
             url: "users/usersAPI.php",
-            data: {command: "login", email_login: email_logIn.val(), pwd_login: pwd_logIn.val()},
+            data: {command: "login", email_login: email_logIn.val(), pwd_login: pwd_logIn.val(), remember_me: rememberMeFlag},
             cache: false,
             beforeSend: function () {
                 $("#loader").css("visibility", "visible");

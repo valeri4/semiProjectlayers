@@ -1,7 +1,7 @@
 <?php
 
 require_once 'usersLogic.php';
-require_once '../includes/helpers.php';
+require_once (__DIR__.'/../includes/helpers.php');
 
 $command = $_REQUEST['command'];
 
@@ -19,9 +19,9 @@ switch ($command) {
         ));
 
         break;
-    
-    
-    
+
+
+
 
     //Registration Email check if exist
     case 'email':
@@ -34,13 +34,14 @@ switch ($command) {
         ));
 
         break;
-    
-    
-    
+
+
+
 
     // http://localhost/SemiProjectLayers/users/usersAPI.php?command=registration&username=asdf&firstName=bla&lastName=foo&password=12345678&confirmPassword=12345678&email=vvv@dfdfd.com&date=15/12/2015&gender=male
-    //Registration new user
-    //
+    /*     * ********************
+      Registration New User
+     * ********************* */
     case 'registration':
 
         $username = $_POST['username'];
@@ -126,25 +127,38 @@ switch ($command) {
         echo $registration_result;
         break;
 
-        
-        
-    //LogIn exist user
+
+
+    /*     * *********************
+      LogIn exist user
+     * ********************* */
     case 'login':
         $email = $_POST['email_login'];
-        $user_password = $_POST['pwd_login'];
-        echo log_in($email, $user_password);
-        break;
-    
-    
-    
+        $email = addslashes($email);
+        $email = strip_tags($email);
 
-    //View User Profile
+        $user_password = $_POST['pwd_login'];
+        $user_password = addslashes($user_password);
+        $user_password = strip_tags($user_password);
+
+        $remember_me = $_POST['remember_me'];
+        $remember_me = addslashes($remember_me);
+        $remember_me = strip_tags($remember_me);
+        
+        echo log_in($email, $user_password, $remember_me);
+        break;
+
+
+    /*     * *********************
+      View User Profile
+     * ********************* */
+
     case 'get_user_profile':
         echo view_user_profile();
         break;
-    
-    
-    
+
+
+
 
     //Update User Profile
     case 'update_user_profile':
@@ -155,10 +169,10 @@ switch ($command) {
         $gender = $_POST['gender'];
         echo update_user_profile($firstName, $lastName, $date, $gender, $about);
         break;
-    
-    
-    
-    
+
+
+
+
 
     case 'password_update':
 

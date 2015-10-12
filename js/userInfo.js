@@ -119,7 +119,7 @@ $(function () {
     function addErrorClass() {
         $('#old_password').parent().removeClass('has-success').addClass("has-error has-feedback");
         //  $('<span class="glyphicon glyphicon-remove form-control-feedback"></span>').insertAfter('#' + fieldId);
-        $('<small class="help-block"  style="display: block;">Wrong Old password</small>').insertAfter('#old_password:last');
+        $('<small class="help-block"  style="display: block;">Invalid old password</small>').insertAfter('#old_password:last');
     }
 
     //Remove Bootstrap Error Class 
