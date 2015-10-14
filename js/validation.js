@@ -141,7 +141,7 @@ $(function () {
             success: function (result) {
                 //If Registration passed -> redirect to index.php
                 if (result == 1) {
-                    window.location.href = "index.php";
+                    window.location.href = "about.php";
                 }
             }
         });

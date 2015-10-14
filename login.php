@@ -1,5 +1,5 @@
 <?php
-require_once './includes/helpers.php';
+require_once  'includes/global.php';
 
 if ($_SESSION['auth']) {
     redirect('index.php');

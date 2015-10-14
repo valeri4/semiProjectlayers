@@ -52,7 +52,7 @@
                                 </form>
                                 <ul class="nav navbar-nav">
                                     <li>
-                                        <a href="#postModal" role="button" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i> Post</a>
+                                        <a href="about.php" role="button"><i class="glyphicon glyphicon-plus"></i> Post</a>
                                     </li>
                                 </ul>
                                 <ul class="nav navbar-nav navbar-right">

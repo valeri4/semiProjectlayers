@@ -42,7 +42,7 @@ function check_user_cookie($user_cookie) {
 
     if (!$u_id) {
 
-        return false;
+        return NULL;
     }
 
     if ($gender == 1) {

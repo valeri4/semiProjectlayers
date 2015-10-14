@@ -1,6 +1,5 @@
 <?php
-
-require_once 'DAL.php';
+require_once 'global.php';
 require_once (__DIR__ . '/../users/autoLogin.php');
 
 function auto_login_fail() {
@@ -17,7 +16,7 @@ if (isset($_COOKIE['remember_me'])) {
 
     if (!check_user_cookie($user_cookie)) {
         //Remove Cookie
-        setcookie('remember_me', "", time() - 1, '/');
+        setcookie('remember_me', "", time() - 10, '/');
         auto_login_fail();
     }
 }
