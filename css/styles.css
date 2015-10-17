@@ -22,14 +22,20 @@ html, body {
 
 /*User Info Block*/
 
-.userImg{
-    visibility: hidden;
-}
+
+
+/*.userImg{
+    display: none;
+}*/
+
 
 .userImg i{
-    color: green;
-    font-size: 20px;
-} 
+    color: red;
+    font-size: 15px;
+    float: right;
+    margin-bottom: 15px;
+    display: none;
+}
 
 .defaultImg i{
     color: green;
@@ -43,8 +49,8 @@ html, body {
 }
 
 .profileImg img{
-    max-width: 154px;
-    max-height: 154px;
+    max-width: 170px;
+    max-height: 170px;
 }
 
 .perfonalInfo{
@@ -56,6 +62,10 @@ html, body {
 
 .loading{
     visibility: hidden;
+}
+
+form {
+    margin-bottom: 1.2em;
 }
 
 .nav {
