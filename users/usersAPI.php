@@ -205,7 +205,7 @@ switch ($command) {
         $about = addslashes($about);
         $about = strip_tags($about);
         $about_length = strlen($about);
-        if ($about_length < 3 || $about_length > 200) {
+        if ($about_length < 3 || $about_length > 800) {
             redirect('../error.php');
             break;
         }
@@ -289,7 +289,7 @@ switch ($command) {
         $about = addslashes($about);
         $about = strip_tags($about);
         $about_length = strlen($about);
-        if ($about_length < 3 || $about_length > 200) {
+        if ($about_length < 3 || $about_length > 800) {
             redirect('../error.php');
             break;
         }

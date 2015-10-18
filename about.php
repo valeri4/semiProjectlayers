@@ -2,9 +2,9 @@
 require_once 'includes/global.php';
 require_once (__DIR__ . '/includes/auth.php');
 
-//if ($_SESSION['about']) {
-//    redirect('index.php');
-//}
+if ($_SESSION['about']) {
+    redirect('index.php');
+}
 
 require_once 'includes/header.php';
 ?>

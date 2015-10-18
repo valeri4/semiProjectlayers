@@ -1,17 +1,18 @@
 <?php
+
 require_once 'includes/global.php';
 require_once 'includes/auth.php';
 require_once 'includes/header.php';
 
 
-var_dump($_SESSION['about']);
-var_dump($_SESSION['username']);
-var_dump($_SESSION['u_id']);
-var_dump($_SESSION['uuID']);
-var_dump($_SESSION['user_image']);
-var_dump($_COOKIE['remember_me']);
+//var_dump($_SESSION['about']);
+//var_dump($_SESSION['username']);
+//var_dump($_SESSION['u_id']);
+//var_dump($_SESSION['uuID']);
+//var_dump($_SESSION['user_image']);
+//var_dump($_COOKIE['remember_me']);
 ?>
-
+<script src="js/mainContent.js" type="text/javascript"></script>
 <!-- content -->                      
 <div class="row">
 
@@ -19,10 +20,11 @@ var_dump($_COOKIE['remember_me']);
     <div class="col-sm-5">
 
         <div class="panel panel-default">
-            <div class="panel-thumbnail"><img src="/assets/example/bg_5.jpg" class="img-responsive"></div>
+            <div class="panel-thumbnail userPicure"><img src="" class="img-responsive"></div>
             <div class="panel-body">
-                <p class="lead">Urbanization</p>
-                <p>45 Followers, 13 Posts</p>
+                <p class="lead fullName"></p>
+                <p class="birthDay"></p>
+                <p class="gender"></p>
             </div>
         </div>
 
@@ -60,9 +62,10 @@ var_dump($_COOKIE['remember_me']);
                                               </div>-->
 
         <div class="panel panel-default">
-            <div class="panel-heading"><h4>What Is Bootstrap?</h4></div>
+            <div class="panel-heading"><h4>About me:</h4></div>
             <div class="panel-body">
-                Bootstrap is front end frameworkto build custom web applications that are fast, responsive &amp; intuitive. It consist of CSS and HTML for typography, forms, buttons, tables, grids, and navigation along with custom-built jQuery plug-ins and support for responsive layouts. With dozens of reusable components for navigation, pagination, labels, alerts etc..                          </div>
+                <p class="aboutMeBody">dgssdgdfgdfgdfgdfgdfg</p>
+            </div>
         </div>
 
 
@@ -73,12 +76,12 @@ var_dump($_COOKIE['remember_me']);
     <div class="col-sm-7">
 
         <div class="well"> 
-            <form class="form">
-                <h4>Sign-up</h4>
-                <div class="input-group text-center">
-                    <input type="text" class="form-control input-lg" placeholder="Enter your email address">
-                    <span class="input-group-btn"><button class="btn btn-lg btn-primary" type="button">OK</button></span>
+            <form class="form-horizontal" role="form">
+                <h4>What's New</h4>
+                <div class="form-group" style="padding:14px;">
+                    <textarea class="form-control" placeholder="Update your status"></textarea>
                 </div>
+                <button class="btn btn-primary" type="button">Post</button>
             </form>
         </div>
 
@@ -162,4 +165,5 @@ var_dump($_COOKIE['remember_me']);
 
 
 <?php
+
 require_once './includes/footer.php';

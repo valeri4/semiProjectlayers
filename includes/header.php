@@ -39,7 +39,7 @@
                                     <span class="icon-bar"></span>
                                     <span class="icon-bar"></span>
                                 </button>
-                                <a href="/SemiProjectLayers" class="navbar-brand logo">FSN</a>
+                                <a href="/SemiProjectLayers/index.php" class="navbar-brand logo">FSN</a>
                             </div>
                             <nav class="collapse navbar-collapse" role="navigation">
                                 <form class="navbar-form navbar-left">

@@ -106,7 +106,7 @@ $(function () {
                 validators: {
                     stringLength: {
                         min: 20,
-                        max: 200,
+                        max: 800,
                         message: 'Please enter value between %s and %s characters long'
                     },
                     notEmpty: {
