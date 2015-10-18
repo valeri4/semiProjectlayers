@@ -1,10 +1,13 @@
 <?php
 
-require_once (__DIR__.'/../includes/DAL.php');
-require_once (__DIR__.'/../includes/helpers.php'); //Includes Session Functions
+require_once (__DIR__ . '/../includes/DAL.php');
+require_once (__DIR__ . '/../includes/helpers.php'); //Includes Session Functions
+require_once (__DIR__ . '/../includes/class.upload.php');
 require_once 'autoLogin.php'; //Includes User Cookies functions
 
 session_start();
+
+
 
 
 /* * *********************
@@ -55,8 +58,6 @@ function check_reg_email($email) {
 
 //Registration New User
 function registration($username, $firstName, $lastName, $password, $email, $date, $gender) {
-
-
     //Check another time email and username if exist. 
     //If somebody sent registration request don't through front end
     if (!check_reg_nickName($username)) {
@@ -66,7 +67,6 @@ function registration($username, $firstName, $lastName, $password, $email, $date
     if (!check_reg_email($email)) {
         return 0;
     }
-
 
     //gender convert
     if ($gender == "male") {
@@ -81,9 +81,11 @@ function registration($username, $firstName, $lastName, $password, $email, $date
     //Password encryption
     $password = password_hash($password, PASSWORD_DEFAULT);
 
+    $user_image = 'def_img';
+
     $connection = connect();
-    $ps = $connection->prepare("insert into users (u_uID, u_email, u_pwd, u_f_name, u_l_name, u_b_day, u_gender, u_userName) values( ?, ?, ?, ?, ?, ?, ?, ?) ");
-    $ps->bind_param("ssssssis", $uuid, $email, $password, $firstName, $lastName, $date, $gender, $username);
+    $ps = $connection->prepare("insert into users (u_uID, u_email, u_pwd, u_f_name, u_l_name, u_b_day, u_gender, u_userName, u_image) values( ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+    $ps->bind_param("ssssssiss", $uuid, $email, $password, $firstName, $lastName, $date, $gender, $username, $user_image);
     $ps->execute();
     $u_id = $ps->insert_id;
     $ps->close();
@@ -108,7 +110,28 @@ function registration($username, $firstName, $lastName, $password, $email, $date
     //Add userData to Session helpers.php
     session_write($userSession);
 
+    //Some bug with write to session througt stdClass
+    $_SESSION['user_image'] = $user_image;
+
     set_user_cookies($u_id, $username, $email);
+
+    return TRUE;
+}
+
+function about_update_after_registration($about) {
+
+    $u_id = $_SESSION['u_id'];
+
+
+    $connection = connect();
+    $ps = $connection->prepare("UPDATE users SET u_about=? WHERE u_id=?");
+    $ps->bind_param("si", $about, $u_id);
+    $ps->execute();
+    $ps->close();
+    $connection->close();
+
+
+    $_SESSION['about'] = $about;
 
     return TRUE;
 }
@@ -120,12 +143,11 @@ function registration($username, $firstName, $lastName, $password, $email, $date
 function log_in($email, $user_password, $remember_me) {
 
     $connection = connect();
-    $ps = $connection->prepare("select u_id, u_uID, u_email, u_pwd, u_f_name, u_l_name, u_b_day, u_gender, u_userName, u_about from users WHERE u_email=? LIMIT 1");
+    $ps = $connection->prepare("select u_id, u_uID, u_email, u_pwd, u_f_name, u_l_name, u_b_day, u_gender, u_userName, u_about, u_image from users WHERE u_email=? LIMIT 1");
     $ps->bind_param("s", $email); //string
     $ps->execute();
-    $ps->bind_result($u_id, $uuid, $email, $password, $firstName, $lastName, $date, $gender, $username, $about);
+    $ps->bind_result($u_id, $uuid, $email, $password, $firstName, $lastName, $date, $gender, $username, $about, $user_image);
     $ps->fetch();
-
 
     //if Email wrong return "email" to front End
     if (!$email) {
@@ -146,6 +168,7 @@ function log_in($email, $user_password, $remember_me) {
     //Custom date Formating d/m/Y function from helpers.php
     $date = dateFormat($date);
 
+
     $userSession = new stdClass();
     $userSession->u_id = $u_id;
     $userSession->uuid = $uuid;
@@ -160,18 +183,19 @@ function log_in($email, $user_password, $remember_me) {
     //Add userData to Session helpers.php
     session_write($userSession);
 
+    //Some bug with write to session througt stdClass
+    $_SESSION['user_image'] = $user_image;
+
     $ps->close();
     $connection->close();
 
     //If User checked 'Remember me' -> Set Cookies
-    if($remember_me == 'true') {
+    if ($remember_me == 'true') {
         update_user_cookies($u_id, $username, $email);
     }
-    
+
     return TRUE;
 }
-
-//var_dump(log_in('fff@ddd.com', 12345678));
 
 /* * *********************
   User Profile
@@ -182,6 +206,12 @@ function view_user_profile() {
     if (!isset($_SESSION['uuID'])) {
         return 'user not logged ';
     }
+    
+    if($_SESSION['user_image'] != 'def_img'){
+        $user_image = md5($_SESSION['uuID']);
+    }  else {
+        $user_image = 'def_img';
+    }
 
     return json_encode(array(
         'email' => $_SESSION['email'],
@@ -190,7 +220,8 @@ function view_user_profile() {
         'date' => $_SESSION['date'],
         'gender' => $_SESSION['gender'],
         'username' => $_SESSION['username'],
-        'about' => $_SESSION['about']
+        'about' => $_SESSION['about'],
+        'user_image' => $user_image
     ));
 }
 
@@ -262,6 +293,46 @@ function password_update($old_password, $new_password) {
     $connection->close();
 
     return TRUE;
+}
+
+function write_user_image_to_db($userPicture = 'user_uuid') {
+
+    $u_id = $_SESSION['u_id'];
+
+    $connection = connect();
+    $ps = $connection->prepare("UPDATE users SET u_image=? WHERE u_id=? ");
+    $ps->bind_param("ss", $userPicture, $u_id);
+    $ps->execute();
+    $ps->close();
+    $connection->close();
+    
+    //Session Update
+    $_SESSION['user_image'] = $userPicture;
+    
+    return $userPicture;
+}
+
+//Upload User Picture with class.upload.php library
+function createUserPicture($userPicture) {
+
+    $user_picture_name = md5($_SESSION['uuID']);
+
+    $userPicture = new Upload($_FILES['user_image']);
+    if ($userPicture->uploaded) {
+        $userPicture->file_new_name_body = $user_picture_name;
+        $userPicture->image_resize = true;
+        $userPicture->image_x = 300;
+        $userPicture->image_ratio_y = true;
+        $userPicture->file_overwrite = true;
+        $userPicture->image_convert = 'png';
+        // save uploaded image with no changes
+        $userPicture->Process('../profileImg');
+        if ($userPicture->processed) {
+            write_user_image_to_db();
+        } else {
+            echo 'error : ';
+        }
+    }
 }
 
 //var_dump(password_update(1234, 5555));

@@ -21,6 +21,7 @@ if (isset($_COOKIE['remember_me'])) {
     }
 }
 
+
 if (!$_SESSION['auth']) {
     auto_login_fail();
 }

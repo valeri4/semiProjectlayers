@@ -1,12 +1,12 @@
 $(function () {
 
     var uploadFile;
+    var file;
 
     //Picture preview
     function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
-
             reader.onload = function (e) {
                 $('#user_image_preview').attr('src', e.target.result);
             }
@@ -19,10 +19,8 @@ $(function () {
     $('#user_image').change(function () {
 
         $('small').text('');
-
-        var file = this.files[0];
+        file = this.files[0];
         var imagefile = file.type;
-
         var match = ["image/jpeg", "image/png", "image/jpg"];
         if (!((imagefile == match[0]) || (imagefile == match[1]) || (imagefile == match[2]))) {
             errorFlag = true;
@@ -38,73 +36,41 @@ $(function () {
 
             //Add remove icon
             $('.userImg i').css({display: "inherit", cursor: "pointer"});
-
             //Preview Picture
             readURL(this);
-
             //Create File Object 
             var getForm = $('form');
             uploadFile = new FormData(getForm[1]);
+
+            uploadUserImage(uploadFile);
         }
     });
 
 
-
+    //Remove user Picture
     $('.userImg i').click(function () {
         $(this).css("display", "none");
         $('.userImg img').attr("src", "profileImg/man.jpg");
-        console.dir($('#user_image').val());
-        uploadFile = "dafault";
+        
+        file = '';
+        $.ajax({
+            type: "POST",
+            url: "users/usersAPI.php",
+            data: {command: "upload", user_image: "def_img"},
+            cache: false
+        });
     });
 
 
 
-    $('#u').formValidation({
-        message: 'This value is not valid',
-        // live: 'disabled',
-        icon: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {
-            about: {
-                validators: {
-                    notEmpty: {
-                        message: 'The About is required and cannot be empty'
-                    }
-                }
-            }
-        }
-    }).on('success.form.fv', function (e) {
-        // Prevent form submission
-        e.preventDefault();
-        var $form = $(e.target),
-                fv = $(e.target).data('formValidation');
-
-        //Upload Picture
+    //Upload Picture
+    function uploadUserImage(image) {
         $.ajax({
-            url: "users/userUploadImg.php?command=upload",
+            url: "users/usersAPI.php?command=upload",
             type: "POST",
-            data: uploadFile,
+            data: image,
             processData: false, // tell jQuery not to process the data
             contentType: false   // tell jQuery not to set contentType
         });
-
-        $.ajax({
-            url: '',
-            type: 'POST',
-            data: $form.serialize(),
-            success: function (result) {
-                //If Registration passed -> redirect to index.php
-                if (result == 1) {
-                    window.location.href = "index.php";
-                }
-            }
-        });
-    });
-
-
-
-
+    }
 });

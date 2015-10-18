@@ -11,8 +11,14 @@ $(function () {
                 $('#eventForm').formValidation('revalidateField', 'date');
             });
 
+    function showUserImage(userImagePath) {
+        $('#user_image_preview').attr('src', 'profileImg/' + userImagePath + '.png');
+        $('.userImg i').css({display: "inherit", cursor: "pointer"});
+    }
 
-//Get User Profile Data
+
+
+    //Get User Profile Data
     $.ajax({
         type: 'GET',
         url: "users/usersAPI.php",
@@ -34,8 +40,16 @@ $(function () {
             } else {
                 $('#female').prop('checked', true);
             }
+
+            //If Image not Default
+            if (userData.user_image != 'def_img') {
+                showUserImage(userData.user_image);
+            }
         }
     });
+
+
+
     //UserInfo Validation
     $('#userInfo').formValidation({
         message: 'This value is not valid',
@@ -90,6 +104,11 @@ $(function () {
             },
             about: {
                 validators: {
+                    stringLength: {
+                        min: 20,
+                        max: 200,
+                        message: 'Please enter value between %s and %s characters long'
+                    },
                     notEmpty: {
                         message: 'The About is required and cannot be empty'
                     }

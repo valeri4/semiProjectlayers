@@ -1,7 +1,7 @@
 <?php
 
 require_once 'usersLogic.php';
-require_once (__DIR__.'/../includes/helpers.php');
+require_once (__DIR__ . '/../includes/helpers.php');
 
 $command = $_REQUEST['command'];
 
@@ -144,7 +144,7 @@ switch ($command) {
         $remember_me = $_POST['remember_me'];
         $remember_me = addslashes($remember_me);
         $remember_me = strip_tags($remember_me);
-        
+
         echo log_in($email, $user_password, $remember_me);
         break;
 
@@ -162,11 +162,54 @@ switch ($command) {
 
     //Update User Profile
     case 'update_user_profile':
+
         $firstName = $_POST['firstName'];
+        $firstName = addslashes($firstName);
+        $firstName = strip_tags($firstName);
+        $firstName_length = strlen($firstName);
+        if ($firstName_length < 3 || $firstName_length > 20) {
+            redirect('../error.php');
+            break;
+        }
+
+
         $lastName = $_POST['lastName'];
-        $about = $_POST['about'];
+        $lastName = addslashes($lastName);
+        $lastName = strip_tags($lastName);
+        $lastName_length = strlen($lastName);
+        if ($lastName_length < 3 || $lastName_length > 20) {
+            redirect('../error.php');
+            break;
+        }
+
         $date = $_POST['date'];
+        $date = addslashes($date);
+        $date = addslashes($date);
+        if (preg_match('/([0-2]\d|3[0-1])\/(0\d|1[0-2])\/(19|20)\d{2}/', $date) == false) {
+            redirect('../error.php');
+            break;
+        }
+
         $gender = $_POST['gender'];
+        $gender = addslashes($gender);
+        $gender = strip_tags($gender);
+        if (strcmp($gender, 'male') != 0) {
+            if (strcmp($gender, 'female') != 0) {
+                redirect('../error.php');
+                break;
+            }
+        }
+
+
+        $about = $_POST['about'];
+        $about = addslashes($about);
+        $about = strip_tags($about);
+        $about_length = strlen($about);
+        if ($about_length < 3 || $about_length > 200) {
+            redirect('../error.php');
+            break;
+        }
+
         echo update_user_profile($firstName, $lastName, $date, $gender, $about);
         break;
 
@@ -208,5 +251,50 @@ switch ($command) {
             redirect('../error.php');
         }
         echo $password_update_result;
+        break;
+
+
+
+    case "upload":
+        
+        //Check If file or Post
+        if (!$_FILES['user_image']) {
+            if ($_POST['user_image'] == 'def_img') {
+                $def_img = $_POST['user_image'];
+                $def_img = addslashes($def_img);
+                $def_img = strip_tags($def_img);
+
+                echo write_user_image_to_db($def_img);
+                break;
+            }
+        }
+        if ($_FILES['user_image']['size'] == 0) {
+            redirect('../error.php');
+            break;
+        } else
+        if (substr($_FILES['user_image']['type'], 0, 5) != "image") {
+            redirect('../error.php');
+            break;
+        } else {
+            $uploudedPicture = $_FILES['user_image'];
+            createUserPicture($uploudedPicture);
+        }
+        break;
+
+
+
+
+    case "update_about":
+        $about = $_POST['about'];
+        $about = addslashes($about);
+        $about = strip_tags($about);
+        $about_length = strlen($about);
+        if ($about_length < 3 || $about_length > 200) {
+            redirect('../error.php');
+            break;
+        }
+
+        echo about_update_after_registration($about);
+
         break;
 }

@@ -36,5 +36,6 @@ function session_write($userSession) {
     $_SESSION['gender'] = $userSession->gender;
     $_SESSION['username'] = $userSession->username;
     $_SESSION['about'] = $userSession->about;
+
 }
 
