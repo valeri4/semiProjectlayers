@@ -321,7 +321,7 @@ function createUserPicture($userPicture) {
     if ($userPicture->uploaded) {
         $userPicture->file_new_name_body = $user_picture_name;
         $userPicture->image_resize = true;
-        $userPicture->image_x = 300;
+        $userPicture->image_x = 600;
         $userPicture->image_ratio_y = true;
         $userPicture->file_overwrite = true;
         $userPicture->image_convert = 'png';

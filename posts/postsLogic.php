@@ -33,7 +33,7 @@ function view_user_posts(){
         return FALSE;
     }
     
-    $sql = "SELECT p_post, p_time, p_postUid FROM posts WHERE u_id = $u_id";
+    $sql = "SELECT p_post, p_time, p_postUid FROM posts WHERE u_id = $u_id  ORDER BY p_time DESC";
     
     return get_array($sql);
     
