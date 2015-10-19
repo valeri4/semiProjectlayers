@@ -13,6 +13,9 @@ require_once 'includes/header.php';
 //var_dump($_COOKIE['remember_me']);
 ?>
 <script src="js/mainContent.js" type="text/javascript"></script>
+<link href="css/formValidation.min.css" rel="stylesheet" type="text/css"/>
+<script src="js/lib/formValidation.min.js" type="text/javascript"></script>
+<script src="js/lib/bootstrap.FormValidation.js" type="text/javascript"></script>
 <!-- content -->                      
 <div class="row">
 
@@ -76,99 +79,47 @@ require_once 'includes/header.php';
     <div class="col-sm-7">
 
         <div class="well"> 
-            <form class="form-horizontal" role="form">
+            <form class="form-horizontal" role="form" id='post'>
                 <h4>What's New</h4>
-                <div class="form-group" style="padding:14px;">
-                    <textarea class="form-control" placeholder="Update your status"></textarea>
+                <div class="form-group">
+                    <textarea class="form-control" placeholder="Update your status" id='addPost' name="addPost"></textarea>
                 </div>
-                <button class="btn btn-primary" type="button">Post</button>
+                <button class="btn btn-primary" type="button" id="postBtn">Post</button>
+                <img src="img/ajax-loader.gif" alt="loading..." class="loading" id="loader"/>
             </form>
         </div>
 
         <div id='postsBlock'>
 
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="dropdown pull-right">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li><a href="#">Separated link</a></li>
-                    </ul>
-                </div> 
-            </div>
-            <div class="panel-body">
-                <img src="//placehold.it/150x150" class="img-circle pull-right"> <a href="#">Keyword: Bootstrap</a>
-                <div class="clearfix"></div>
-                <hr>
 
-                <p>If you're looking for help with Bootstrap code, the <code>twitter-bootstrap</code> tag at <a href="http://stackoverflow.com/questions/tagged/twitter-bootstrap">Stackoverflow</a> is a good place to find answers.</p>
 
-                <hr>
-                <form>
-                    <div class="input-group">
-                        <div class="input-group-btn">
-                            <button class="btn btn-default">+1</button><button class="btn btn-default"><i class="glyphicon glyphicon-share"></i></button>
-                        </div>
-                        <input type="text" class="form-control" placeholder="Add a comment..">
+
+        <!--post modal-->
+        <div id="editPostWindow" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        Edit Post
                     </div>
-                </form>
-
-            </div>
-        </div>
-
-        <div class="panel panel-default">
-            <div class="panel-heading"><a href="#" class="pull-right">View all</a> 
-
-
-                <div class="dropdown">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li><a href="#">Separated link</a></li>
-                    </ul>
+                    <div class="modal-body">
+                        <form class="form center-block">
+                            <div class="form-group">
+                                <textarea class="form-control input-lg" id="textEditor" autofocus=""></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <div>
+                            <button class="btn btn-primary" type="button" data-dismiss="modal" aria-hidden="true" id="updatePost">Update</button>
+                            <img src="img/ajax-loader.gif" alt="loading..." class="loading" id="loader"/>
+                        </div>	
+                    </div>
                 </div>
-
-
-                <p><strong>Portlet Heading</strong></p></div>
-            <div class="panel-body">
-                <ul class="list-group">
-                    <li class="list-group-item">Modals</li>
-                    <li class="list-group-item">Sliders / Carousel</li>
-                    <li class="list-group-item">Thumbnails</li>
-                </ul>
             </div>
         </div>
+        <?php
 
-        <div class="panel panel-default">
-            <div class="panel-thumbnail"><img src="/assets/example/bg_4.jpg" class="img-responsive"></div>
-            <div class="panel-body">
-                <p class="lead">Social Good</p>
-                <p>1,200 Followers, 83 Posts</p>
-
-                <p>
-                    <img src="https://lh6.googleusercontent.com/-5cTTMHjjnzs/AAAAAAAAAAI/AAAAAAAAAFk/vgza68M4p2s/s28-c-k-no/photo.jpg" width="28px" height="28px">
-                    <img src="https://lh4.googleusercontent.com/-6aFMDiaLg5M/AAAAAAAAAAI/AAAAAAAABdM/XjnG8z60Ug0/s28-c-k-no/photo.jpg" width="28px" height="28px">
-                    <img src="https://lh4.googleusercontent.com/-9Yw2jNffJlE/AAAAAAAAAAI/AAAAAAAAAAA/u3WcFXvK-g8/s28-c-k-no/photo.jpg" width="28px" height="28px">
-                </p>
-            </div>
-        </div>
-
-    </div>
-</div><!--/row-->
-
-
-
-<?php
-
-require_once './includes/footer.php';
+        require_once './includes/footer.php';
+        

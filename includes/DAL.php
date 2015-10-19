@@ -17,7 +17,7 @@ function insert($sql) {
     mysqli_query($connection, $sql);
     $insert_id = mysqli_insert_id($connection);
     mysqli_close($connection);
-    
+
     return $insert_id;
 }
 
@@ -26,7 +26,7 @@ function update($sql) {
     mysqli_query($connection, $sql);
     $affected_rows = mysqli_affected_rows($connection); //How many rows was Updated
     mysqli_close($connection);
-    
+
     return $affected_rows;
 }
 
@@ -35,30 +35,39 @@ function delete($sql) {
     mysqli_query($connection, $sql);
     $affected_rows = mysqli_affected_rows($connection);
     mysqli_close($connection);
-    
+
     return $affected_rows;
 }
 
-function get_object($sql){
+function get_object($sql) {
     $connection = connect();
     $result = mysqli_query($connection, $sql);
+    if (!$result) {
+        return FALSE;
+    }
     $obj = mysqli_fetch_object($result);
     mysqli_close($connection);
-    
+
+    if (!$obj) {
+        return FALSE;
+    }
     return $obj;
 }
 
-
-function get_array($sql){
+function get_array($sql) {
     $connection = connect();
     $arr = array();
     $result = mysqli_query($connection, $sql);
-    
-    while($obj = mysqli_fetch_object($result)){
+    if (!$result) {
+        return FALSE;
+    }
+    while ($obj = mysqli_fetch_object($result)) {
         $arr[] = $obj;
     }
-    
+
     mysqli_close($connection);
-    
+    if (!$arr) {
+        return FALSE;
+    }
     return $arr;
 }

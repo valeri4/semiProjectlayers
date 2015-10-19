@@ -18,7 +18,7 @@ require_once 'includes/header.php';
     <div class="col-sm-4 panel panel-default">
 
 
-            <div class="col-sm-8 col-md-8">
+            <div class="col-sm-12 col-md-12">
                 <div class="thumbnail userImg">
                     <i class="glyphicon glyphicon-remove"></i>
                     <img id="user_image_preview" class="profileImg" src="profileImg/man.jpg" alt=""/>

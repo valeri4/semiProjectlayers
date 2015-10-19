@@ -12,7 +12,8 @@ $(function () {
             });
 
     function showUserImage(userImagePath) {
-        $('#user_image_preview').attr('src', 'profileImg/' + userImagePath + '.png');
+        d = new Date();
+        $('#user_image_preview').attr('src', 'profileImg/' + userImagePath + '.png'+ new Date().getTime());
         $('.userImg i').css({display: "inherit", cursor: "pointer"});
     }
 
