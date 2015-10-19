@@ -5,6 +5,7 @@ require_once (__DIR__ . '/../includes/helpers.php'); //Includes Session Function
 
 session_start();
 
+
 function add_post($post) {
     $u_id = $_SESSION['u_id'];
     $uuID = $_SESSION['uuID'];
@@ -25,6 +26,8 @@ function add_post($post) {
     return $postUid;
 }
 
+
+
 function update_post($post, $postUid) {
     $u_id = $_SESSION['u_id'];
 
@@ -41,6 +44,29 @@ function update_post($post, $postUid) {
 
     return TRUE;
 }
+
+
+
+
+function delete_post($postUid) {
+    $u_id = $_SESSION['u_id'];
+
+    $connection = connect();
+    if (!$ps = $connection->prepare("DELETE FROM posts WHERE u_id = ? AND p_postUid = ? LIMIT 1")) {
+        return FALSE;
+    }
+    $ps->bind_param("is", $u_id, $postUid);
+    if (!$ps->execute()) {
+        return FALSE;
+    }
+    $ps->close();
+    $connection->close();
+
+    return TRUE;
+}
+
+
+
 
 function view_user_posts() {
     if (!$u_id = $_SESSION['u_id']) {

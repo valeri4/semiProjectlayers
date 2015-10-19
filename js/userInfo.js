@@ -13,7 +13,7 @@ $(function () {
 
     function showUserImage(userImagePath) {
         d = new Date();
-        $('#user_image_preview').attr('src', 'profileImg/' + userImagePath + '.png'+ new Date().getTime());
+        $('#user_image_preview').attr('src', 'profileImg/' + userImagePath + '.png'+ '?' + new Date().getTime());
         $('.userImg i').css({display: "inherit", cursor: "pointer"});
     }
 

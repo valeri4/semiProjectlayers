@@ -30,14 +30,12 @@ $(function () {
 
             //If Image not Default
             if (userData.user_image != 'def_img') {
-                $('.userPicure img').attr('src', 'profileImg/' + userData.user_image + '.png');
+                $('.userPicure img').attr('src', 'profileImg/' + userData.user_image + '.png'+ '?' + new Date().getTime());
             } else {
                 $('.userPicure img').attr("src", "profileImg/man.jpg");
             }
         }
     });
-
-    //  postHtml = '<div class="panel panel-default" id=""><div class="panel-body"><p class="pull-right">Date:</p><div class="clearfix"></div></div></div>';
 
 
 
@@ -47,24 +45,39 @@ $(function () {
      * 
      * 
      **************************/
+
+    function dateTimeFormat(postDate) {
+        var date = new Date(postDate);
+        var hours = date.getHours();
+        var minutes = "0" + date.getMinutes();
+        var days = date.getDate();
+        var month = date.getMonth()+1;
+        var year = date.getFullYear()
+        var formattedTime = hours + ':' + minutes.substr(-2) + " " +  days + "/" + month + "/" + year;
+
+        return formattedTime;
+    }
     function noPostsToView() {
-        $(' <div class="panel panel-default"><div class="panel-body"><h4 class="text-center">No posts to view</h4></div></div>').appendTo('#postsBlock');
+        $(' <div class="panel panel-default noPostsView"><div class="panel-body"><h4 class="text-center">No posts to view</h4></div></div>').appendTo('#postsBlock');
     }
 
     function viewPosts(postId, postDate, postText) {
-        //  postDate = Date.parse(postDate);
-//        var temp = new Date(postDate);
-//        postDate = temp.getDate();
-
-        $('<div class="panel panel-default postBlock" id="' + postId + '"><div class="panel-body"><div class="dropdown pull-right"><button class="btn btn-default postMenu dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button><ul class="dropdown-menu" aria-labelledby="dropdownMenu1"><li><a href="#" id="editPost">Edit</a></li><li><a href="#" id="deletePost">Delete</a></li></ul></div><p class="pull-right">Date: ' + postDate + '</p><div class="clearfix"></div><p class="postText">' + postText + '</p></div></div>').appendTo('#postsBlock');
+        postDate = dateTimeFormat(postDate);
+        
+        $('<div class="panel panel-default postBlock" id="' + postId + '"><div class="panel-body"><div class="dropdown pull-right"><button class="btn btn-default postMenu dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button><ul class="dropdown-menu" aria-labelledby="dropdownMenu1"><li><a href="#" id="editPost">Edit</a></li><li><a href="#" id="deletePost">Delete</a></li></ul></div><p class="pull-right">' + postDate + '</p><div class="clearfix"></div><p class="postText">' + postText + '</p></div></div>').appendTo('#postsBlock');
     }
 
     function addPost(postId) {
-        //  postDate = Date.parse(postDate);
+        //Remove No Posts Div after Posting a first message
+        if($('.noPostsView').length > 0){
+            $('.noPostsView').remove();
+        }
+        
         var postDate = new Date();
+        postDate = dateTimeFormat(postDate);
         var postText = $('#addPost').val();
 
-        $('#postsBlock').prepend('<div class="panel panel-default postBlock" id="' + postId + '"><div class="panel-body"><div class="dropdown pull-right"><button class="btn btn-default postMenu dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button><ul class="dropdown-menu" aria-labelledby="dropdownMenu1"><li><a href="#" id="editPost">Edit</a></li><li><a href="#" id="deletePost">Delete</a></li></ul></div><p class="pull-right">Date: ' + postDate + '</p><div class="clearfix"></div><p class="postText">' + postText + '</p></div></div>');
+        $('#postsBlock').prepend('<div class="panel panel-default postBlock" id="' + postId + '"><div class="panel-body"><div class="dropdown pull-right"><button class="btn btn-default postMenu dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button><ul class="dropdown-menu" aria-labelledby="dropdownMenu1"><li><a href="#" id="editPost">Edit</a></li><li><a href="#" id="deletePost">Delete</a></li></ul></div><p class="pull-right">' + postDate + '</p><div class="clearfix"></div><p class="postText">' + postText + '</p></div></div>');
     }
 
     $.ajax({
@@ -87,6 +100,7 @@ $(function () {
         }
     });
     /* View User Posts End*/
+
 
 
 
@@ -185,24 +199,6 @@ $(function () {
 
 
 
-//    //On click => Edit Post
-//    $('.postsBlock').on('click', '.editPost', function () {
-//
-//        //Get Post Block Object
-//        postBlock = $(this).parents('.post');
-//
-//        postBlockId = postBlock.attr('id');
-//
-//        //Get Text Value of Post
-//        postText = $(postBlock).find('p').text();
-//
-//        //Add Text of Post to Modal Window
-//        $('#textEditor').val(postText);
-//        $('#editPostWindow').modal('show');
-//
-//    });
-
-
 
     /**************************
      * Edit Post
@@ -232,7 +228,7 @@ $(function () {
     $('#updatePost').on('click', function () {
         console.log(postText.text());
         console.log(textEditor.val());
-        
+
         $.ajax({
             type: "POST",
             url: "posts/postsAPI.php",
@@ -257,8 +253,18 @@ $(function () {
             }
         });
     });
+    
+    
+    
+    
+    
+    /**************************
+     * Remove Post
+     * 
+     * 
+     **************************/
 
-    var postId, postBlock, postText, updateBtn, textEditor;
+    var postId, postBlock;
 
     $('#postsBlock').on('click', '#deletePost', function () {
         //Get Post Block Object
@@ -266,11 +272,31 @@ $(function () {
 
         //Get Post Id
         postId = postBlock.attr('id');
-        
-        postBlock.remove();
-    });
 
-//    $('#editPost').click(function(){
-//        console.dir($(this));
-//    });
+        $.ajax({
+            type: "POST",
+            url: "posts/postsAPI.php",
+            data: {command: "delete_post", postUid: postId},
+            cache: false,
+            beforeSend: function () {
+                $("#loader").css("visibility", "visible");
+            },
+            error: function (err) {
+                console.log("Error: " + err.status + ", " + err.statusText);
+            },
+            complete: function () {
+                $("#loader").css("visibility", "hidden");
+            },
+            success: function (result) {
+                if (result) {
+                    postBlock.remove();
+                }
+                if (!result) {
+                    alert('ERROR: The post could not be deleted');
+                }
+            }
+        });
+
+
+    });
 });

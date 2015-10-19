@@ -5,6 +5,12 @@ require_once 'postsLogic.php';
 $command = $_REQUEST['command'];
 
 switch ($command) {
+
+    case "load_posts":
+        echo json_encode(view_user_posts());
+        break;
+
+
     case "add_post":
         $add_post = $_POST['addPost'];
         $add_post = addslashes($add_post);
@@ -14,9 +20,9 @@ switch ($command) {
             echo FALSE;
             break;
         }
-
         echo add_post($add_post);
         break;
+
 
     case "update_post":
         $update_post = $_POST['updatePost'];
@@ -32,16 +38,23 @@ switch ($command) {
         $postUid = addslashes($postUid);
         $postUid = strip_tags($postUid);
         $postUid_length = strlen($postUid);
-        if ($update_post_length < 10) {
+        if ($postUid_length < 10) {
             echo FALSE;
             break;
         }
-
-
         echo update_post($update_post, $postUid);
         break;
 
-    case "load_posts":
-        echo json_encode(view_user_posts());
+
+    case "delete_post":
+        $postUid = $_POST['postUid'];
+        $postUid = addslashes($postUid);
+        $postUid = strip_tags($postUid);
+        $postUid_length = strlen($postUid);
+        if ($postUid_length < 10) {
+            echo FALSE;
+            break;
+        }
+        echo delete_post($postUid);
         break;
 }
