@@ -1,12 +1,12 @@
 $(function () {
-    
+
     //Get UserName Parameter from URL
     var friendURL = window.location.href;
 
     function getURLParameter(name) {
         return decodeURIComponent((new RegExp('[?|&]([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null
     }
-    
+
     var userName = getURLParameter(friendURL);
     console.dir(userName);
 
@@ -16,6 +16,7 @@ $(function () {
      * 
      **************************/
 
+
     $.ajax({
         type: 'GET',
         url: "friends/friendsAPI.php",
@@ -24,11 +25,16 @@ $(function () {
             console.log("Error: " + err.status);
         },
         success: function (userData) {
-            
+
             if (userData == 'self') {
-                        window.location.href = "index.php";
-                    }
+                window.location.href = "index.php";
+            }
             
+            if(userData == 'user_not_exist'){
+                $('#friendPostsBlock').html("<h2>User: " + userName + " does not exist<h2>");
+            }
+
+
             userData = JSON.parse(userData);
             $('#username').val(userData.username);
             $('.fullName').text(userData.firstName + " " + userData.lastName);
@@ -82,25 +88,25 @@ $(function () {
     }
 
 
-    $.ajax({
-        type: 'GET',
-        url: "posts/postsAPI.php",
-        data: {command: "load_posts"},
-        error: function (err) {
-            console.log("Error: " + err.status);
-        },
-        success: function (userData) {
-            userData = JSON.parse(userData);
-            if (!userData) {
-                noPostsToView();
-            } else {
-                $.each(userData, function (i, val) {
-                    viewPosts(val.p_time, val.p_post);
-
-                });
-            }
-        }
-    });
+//    $.ajax({
+//        type: 'GET',
+//        url: "posts/postsAPI.php",
+//        data: {command: "load_posts"},
+//        error: function (err) {
+//            console.log("Error: " + err.status);
+//        },
+//        success: function (userData) {
+//            userData = JSON.parse(userData);
+//            if (!userData) {
+//                noPostsToView();
+//            } else {
+//                $.each(userData, function (i, val) {
+//                    viewPosts(val.p_time, val.p_post);
+//
+//                });
+//            }
+//        }
+//    });
     /* View User Posts End*/
 
 

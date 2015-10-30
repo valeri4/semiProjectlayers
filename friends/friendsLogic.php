@@ -1,6 +1,7 @@
 <?php
 
 require_once '../includes/DAL.php';
+require_once '../includes/helpers.php';
 
 session_start();
 
@@ -101,7 +102,8 @@ function get_friend_data($friend_user_name) {
     $ps->close();
     $connection->close();
 
-
+    $friend_birthdate = dateFormat($friend_birthdate);
+    
     //If not friends -> get user data
     if (!$friend_u_id) {
         $connection = connect();
@@ -117,14 +119,14 @@ function get_friend_data($friend_user_name) {
         $ps->close();
         $connection->close();
         
-        $_SESSION['friend_id'] = $friend_u_id;
+        $friend_birthdate = dateFormat($friend_birthdate);
+        
 
         if ($friend_image != 'def_img') {
             $friend_image = md5($friend_u_uID);
         } else {
             $friend_image = 'def_img';
         }
-        
 
         return json_encode(array(
             'firstName' => $friend_first_name,
@@ -150,6 +152,7 @@ function get_friend_data($friend_user_name) {
         'lastName' => $friend_last_name,
         'date' => $friend_birthdate,
         'gender' => $friend_gender,
+        'about' => $friend_about,
         'user_image' => $friend_image,
         'friends' => 1   
     ));
