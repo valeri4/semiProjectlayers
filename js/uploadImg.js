@@ -27,9 +27,9 @@ $(function () {
             $('small').text('Image type error');
         }
 
-        if (file.size > (1024 * 1024 * 1.5)) {
+        if (file.size > (1024 * 1024 * 2.5)) {
             errorFlag = true;
-            $('small').text('Image size must be less than 1.5MB');
+            $('small').text('Image size must be less than 2.5MB');
         }
 
         else {

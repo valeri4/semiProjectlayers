@@ -89,32 +89,52 @@ require_once 'includes/header.php';
             </form>
         </div>
 
-        <div id='postsBlock'>
+        <div class="panel panel-default">
+            <div class="tabsBlock">
 
-        </div>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs tabsList" role="tablist">
+                    <li role="presentation" class="active"><a href="#my_posts" aria-controls="my_posts" role="tab" data-toggle="tab">My Posts</a></li>
+                    <li role="presentation"><a href="#friends_posts" aria-controls="friends_posts" role="tab" data-toggle="tab">Friends Posts</a></li>
+                </ul>
 
 
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="my_posts">
+                        <div id='postsBlock'>
 
-        <!--post modal-->
-        <div id="editPostWindow" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        Edit Post
+                        </div>
                     </div>
-                    <div class="modal-body">
-                        <form class="form center-block">
-                            <div class="form-group">
-                                <textarea class="form-control input-lg" id="textEditor" autofocus=""></textarea>
-                            </div>
-                        </form>
+                    <div role="tabpanel" class="tab-pane" id="friends_posts">
+                        <p>Profile Page</p>
                     </div>
-                    <div class="modal-footer">
-                        <div>
-                            <button class="btn btn-primary" type="button" data-dismiss="modal" aria-hidden="true" id="updatePost">Update</button>
-                            <img src="img/ajax-loader.gif" alt="loading..." class="loading" id="loader"/>
-                        </div>	
+                </div>
+            </div>
+
+
+
+            <!--post modal-->
+            <div id="editPostWindow" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            Edit Post
+                        </div>
+                        <div class="modal-body">
+                            <form class="form center-block">
+                                <div class="form-group">
+                                    <textarea class="form-control input-lg" id="textEditor" autofocus=""></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <div>
+                                <button class="btn btn-primary" type="button" data-dismiss="modal" aria-hidden="true" id="updatePost">Update</button>
+                                <img src="img/ajax-loader.gif" alt="loading..." class="loading" id="loader"/>
+                            </div>	
+                        </div>
                     </div>
                 </div>
             </div>
