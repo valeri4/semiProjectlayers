@@ -47,6 +47,7 @@ session_start();
 
 function get_friend_data($friend_user_name) {
     $u_id = $_SESSION['u_id'];
+    
 
     $friend_user_name = addslashes($friend_user_name);
     $friend_user_name = strip_tags($friend_user_name);
@@ -70,19 +71,21 @@ function get_friend_data($friend_user_name) {
     if (!$user_name_check_exist) {
         return 'user_not_exist';
     }
+    
+    if($user_name_check_exist == $u_id){
+        return 'self';
+    }
 
     $ps->close();
     $connection->close();
     /*     * ********* Check if user exist End    ************** */
 
-    var_dump($user_name_check_exist);
-    var_dump($u_id);
 
 
-    /*     * ********* Check if a friend and get user data Start     ************** */
+    /*     * ********* Check if frinds ************** */
     $connection = connect();
     if (!$ps = $connection->prepare("select 
-                                    u.u_id, u.u_uID, u_f_name, u_l_name, u_about, u_gender, u_image, u.u_userName
+                                    u.u_id, u.u_uID, u_f_name, u_l_name, u_about, u_gender, u_image, u_b_day
                                     from users  as u
                                     join relationships as r
                                     on u.u_id = r.u_id where r.u_id = ? and friend_id = ?
@@ -93,26 +96,69 @@ function get_friend_data($friend_user_name) {
     if (!$ps->execute()) {
         return FALSE;
     }
-    $ps->bind_result($friend_u_id, $friend_u_uID, $friend_first_name, $friend_last_name, $friend_about, $friend_gender, $friend_image, $friend_user_name);
+    $ps->bind_result($friend_u_id, $friend_u_uID, $friend_first_name, $friend_last_name, $friend_about, $friend_gender, $friend_image, $friend_birthdate);
     $ps->fetch();
-
-    var_dump($friend_u_id, $friend_u_uID, $friend_first_name, $friend_last_name, $friend_about, $friend_gender, $friend_image, $friend_user_name);
-
-    if (!$friend_u_id) {
-        return 'not_friend';
-    }
-
     $ps->close();
     $connection->close();
-    /*     * ********* Check if a friend and get user data Start     ************** */
 
 
+    //If not friends -> get user data
+    if (!$friend_u_id) {
+        $connection = connect();
+        if (!$ps = $connection->prepare("select u_id, u_uID, u_f_name, u_l_name, u_about, u_gender, u_image, u_b_day from users where u_id = ?")) {
+            return FALSE;
+        }
+        $ps->bind_param("i", $user_name_check_exist);
+        if (!$ps->execute()) {
+            return FALSE;
+        }
+        $ps->bind_result($friend_u_id, $friend_u_uID, $friend_first_name, $friend_last_name, $friend_about, $friend_gender, $friend_image, $friend_birthdate);
+        $ps->fetch();
+        $ps->close();
+        $connection->close();
+        
+        $_SESSION['friend_id'] = $friend_u_id;
 
+        if ($friend_image != 'def_img') {
+            $friend_image = md5($friend_u_uID);
+        } else {
+            $friend_image = 'def_img';
+        }
+        
 
-    return TRUE;
+        return json_encode(array(
+            'firstName' => $friend_first_name,
+            'lastName' => $friend_last_name,
+            'date' => $friend_birthdate,
+            'gender' => $friend_gender,
+            'user_image' => $friend_image,
+            'friends' => 0   
+        ));
+    }
+
+    
+    $_SESSION['friend_id'] = $friend_u_id;
+
+    if ($friend_image != 'def_img') {
+        $friend_image = md5($friend_u_uID);
+    } else {
+        $friend_image = 'def_img';
+    }
+
+    return json_encode(array(
+        'firstName' => $friend_first_name,
+        'lastName' => $friend_last_name,
+        'date' => $friend_birthdate,
+        'gender' => $friend_gender,
+        'user_image' => $friend_image,
+        'friends' => 1   
+    ));
 }
 
-var_dump(get_friend_data("tet"));
+//var_dump(get_friend_data("tet"));
+
+
+
 
 function send_request() {
 
