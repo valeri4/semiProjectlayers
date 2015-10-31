@@ -165,15 +165,32 @@ function get_friend_data($friend_user_name) {
 
 //var_dump(get_friend_data("tet"));
 
+function get_requests() {
+    $u_id = $_SESSION['u_id'];
 
+    $sql = "select req_u_id from friend_request where req_friend_id = $u_id";
 
+    $result = get_array($sql);
+
+    $requestsArr = [];
+
+    foreach ($result as $obj) {
+        $requestsArr[] = $obj->req_u_id;
+    }
+    
+    foreach ($requestsArr )
+    
+    var_dump($requestsArr);
+}
+
+var_dump(get_requests());
 
 function send_request() {
 
     $u_id = $_SESSION['u_id'];
 
     if (!$_SESSION['friend_search_id']) {
-        return FALSE;
+        return 'no_friend_id';
     }
     $friend_id = $_SESSION['friend_search_id'];
 
@@ -184,18 +201,16 @@ function send_request() {
     $result = get_object($sql);
 
     if ($result) {
-        return FALSE;
+        return 'request_exist';
     }
 
     $sql = "INSERT INTO friend_request (req_u_id, req_friend_id) VALUES ($u_id, $friend_id)";
-    get_object($sql);
+    insert($sql);
 
     $_SESSION['friend_search_id'] = null;
 
-    return TRUE;
+    return 'request_was_sent';
 }
-
-var_dump(send_request());
 
 function accept_request() {
     

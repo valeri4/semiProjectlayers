@@ -39,7 +39,7 @@ $(function () {
 
 
         function notFriends() {
-            $('#friendPostsBlock').html("To see " + firstName + " " + lastName + "'s posts you must be a friends. Add  <a href='#addToFriends'>" + firstName + " " + lastName + "</a>to friends");
+            $('#friendPostsBlock').html("Only friends can see this content. Add <a href='#addToFriends'>" + firstName + " " + lastName + "</a> to friends");
         }
 
         function viewPosts(postDate, postText) {
@@ -117,7 +117,7 @@ $(function () {
                 }
 
                 if (userData.friends == 0) {
-                    $('.aboutMeBody').html("<p> Add <a href='#addToFriends" + userName + "'>" + firstName + " " + lastName + "</a> to friends to see this information</p>");
+                    $('.aboutMeBody').html("<p> Only friends can see this content. Add <a href='#addToFriends" + userName + "'>" + firstName + " " + lastName + "</a> to friends</p>");
                 } else {
                     $('.aboutMeBody').text(userData.about);
                 }
@@ -148,21 +148,34 @@ $(function () {
                 console.log("Error: " + err.status);
             },
             success: function (userData) {
-                if(userData){
-                    alert('Request Sended');
-                }else{
-                    alert('Error Send Request');
+                if (userData == 'request_was_sent') {
+                    $('#requestModal').modal('show');
+                    $('#requestModalBody p').text('Request was sent');
+                    setTimeout(function () {
+                        window.location.href = 'index.php';
+                    }, 3000);
+                }
+                if (userData == 'request_exist') {
+                    $('#requestModal').modal('show');
+                    $('#requestModalBody p').text('Error: Request exist');
+                    setTimeout(function () {
+                        window.location.href = 'index.php';
+                    }, 3000);
+                }
+                if (userData == 'no_friend_id') {
+                    window.location.href = 'error.php';
                 }
             }
         });
     }
-    
-    
-    $('#friendPostsBlock, #aboutBlock').on('click', 'a[href*="addToFriends"]', function(){
+
+
+    $('#friendPostsBlock, #aboutBlock').on('click', 'a[href*="addToFriends"]', function () {
         //alert('addToFriends clicked');
-        $('#requestModal').modal('show');
+
+        send_friend_request();
     });
-    
+
 
 
 

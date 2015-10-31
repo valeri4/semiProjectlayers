@@ -119,7 +119,7 @@ $(function () {
 
     function textValidation(postTextarea, postButton) {
 
-        var maxLength = 25; //Max length of input field
+        var maxLength = 1000; //Max length of input field
         var minLength = 1; //Min length of input field
         var errFlag = false;
 

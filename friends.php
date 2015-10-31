@@ -92,7 +92,7 @@ require_once 'includes/header.php';
                     <h4 class="modal-title">Request Satus</h4>
                 </div>
                 <div class="modal-body" id="requestModalBody">
-                    <p>Request was sent</p>
+                    <p></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
