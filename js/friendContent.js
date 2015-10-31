@@ -4,7 +4,7 @@ $(function () {
     var friendURL = window.location.href;
 
     function getURLParameter(name) {
-        return decodeURIComponent((new RegExp('[?|&]([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null
+        return decodeURIComponent((new RegExp('[?|&]([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null;
     }
 
     var userName = getURLParameter(friendURL);
@@ -184,9 +184,9 @@ $(function () {
     }
 
     function newFriendRequest() {
-        alert('New Friend Request');
+        $('#friendInfo').remove();
+        console.dir(window.friendsRequests.userData);
     }
-
 
 
     if (userName == 'allfriends') {

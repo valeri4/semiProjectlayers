@@ -5,46 +5,6 @@ require_once '../includes/helpers.php';
 
 session_start();
 
-//function get_friend_data($friend_user_name) {
-//
-//    $u_id = $_SESSION['u_id'];
-//
-//    $connection = connect();
-//    if (!$ps = $connection->prepare("
-//        select u.u_id, u.u_uID, u_f_name, u_l_name, u_about, u_gender, u_image, u.u_userName, 
-//        if(exists(select * from users 
-//        where u_userName = ?), 1, 0) as user_exists
-//        from users  as u
-//        join relationships as r
-//        on u.u_id = r.u_id where u_userName = ? and friend_id = ? 
-//    ")) {
-//        return FALSE;
-//    }
-//    $ps->bind_param("ssi", $friend_user_name, $friend_user_name, $u_id);
-//    if (!$ps->execute()) {
-//        return 'execute';
-//    }
-//    $ps->bind_result($friend_u_id, $friend_u_uID, $friend_first_name, $friend_last_name, $friend_about, $friend_gender, $friend_image, $friend_user_name, $friend_user_name_exists);
-//    $ps->fetch();
-//
-//
-//    var_dump('u_id = ' . $friend_u_id, 'uuid = ' . $friend_u_uID, 'first = ' . $friend_first_name, 'last = ' . $friend_last_name, 'about = ' . $friend_about, 'gender = ' . $friend_gender, 'image = ' . $friend_image, 'user name = ' . $friend_user_name, 'user exists = ' . $friend_user_name_exists);
-//
-//    $_SESSION['friend_search_id'] = $friend_u_id;
-//    
-//    if(!$friend_u_id){
-//        return 'user';
-//    }
-//
-//    $ps->close();
-//    $connection->close();
-//    
-//    return TRUE;
-//}
-//
-//var_dump(get_friend_data('tet'));
-
-
 
 function get_friend_data($friend_user_name) {
     $u_id = $_SESSION['u_id'];
@@ -171,19 +131,44 @@ function get_requests() {
     $sql = "select req_u_id from friend_request where req_friend_id = $u_id";
 
     $result = get_array($sql);
+    
+    if(!$result){
+        return 'no_requests';
+    }
 
     $requestsArr = [];
 
+    //Get object of users who send "Add frind request"
     foreach ($result as $obj) {
         $requestsArr[] = $obj->req_u_id;
     }
+
+
+    $resultArr = [];
+    $count = 0;
+    //Get array of users info who send request
+    foreach ($requestsArr as $val) {
+        $count++;
+        $sql = "select u_uID, u_f_name, u_l_name, u_image from users where u_id = $val";
+        $result_query = get_object($sql);
+
+        if ($result_query->u_image != 'def_img') {
+            $result_query->u_uID = md5($result_query->u_uID);
+        } else {
+            $result_query->u_image = 'def_img';
+        }
+        
+        //Remnove user ID
+        unset($result_query -> u_uID);
+        
+        $resultArr[] = $result_query;
+    }
     
-    foreach ($requestsArr )
     
-    var_dump($requestsArr);
+    return json_encode($resultArr);
 }
 
-var_dump(get_requests());
+
 
 function send_request() {
 

@@ -1,7 +1,16 @@
 
 $(function () {
-    
-     $('#datePicker')
+
+    //Sign Up Collaps in login.php
+    $("#signUpFormCollaps").click(function () {
+        $(".collapse").collapse('toggle');
+    });
+
+    $("#collapsePwd").click(function () {
+        $("#collapse1").collapse('toggle');
+    });
+
+    $('#datePicker')
             .datepicker({
                 format: 'dd/mm/yyyy',
                 startDate: '-80y',
@@ -153,7 +162,7 @@ $(function () {
     var email_logIn = $('#email_login');
     var pwd_logIn = $('#pwd_login');
     var fieldId, errMsg = '';
- //   var emailErrFlag = false;
+    //   var emailErrFlag = false;
     var passErrFlag = false;
     //Adding Bootstrap Error Class 
     function addErrorClass(fieldId, errMsg) {
@@ -172,12 +181,12 @@ $(function () {
 
     //Email & Password Validation 
     $('#logInSubmit').click(function () {
-           
-           
-           var rememberMeFlag = false;
-           if($('#remember_me').is(':checked')){
-               rememberMeFlag = true;
-           }
+
+
+        var rememberMeFlag = false;
+        if ($('#remember_me').is(':checked')) {
+            rememberMeFlag = true;
+        }
 
         //  var dataString = 'email_login=' + email_logIn.val() + '&pwd_login=' + pwd_logIn.val();
 

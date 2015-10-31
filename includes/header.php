@@ -52,10 +52,10 @@
                                 </form>
                                 <ul class="nav navbar-nav">
                                     <li>
-                                       <a href="#dfdsf" role="button" data-toggle="modal">New Friends <span class="badge ">0</span></a>
+                                       <a href="friends.php?newFriend" role="button" data-toggle="modal">New Friends <span class="badge" id="requestBadge"></span></a>
                                     </li>
                                     <li>
-                                       <a href="#postModal" role="button" data-toggle="modal">All Friends <span class="badge ">5</span></a>
+                                       <a href="#postModal" role="button" data-toggle="modal">All Friends <span class="badge">5</span></a>
                                     </li>
                                 </ul>
                                 <ul class="nav navbar-nav navbar-right">

@@ -1,17 +1,25 @@
 
-$(document).ready(function () {
 
-//    $('#postModal').modal({show: true});
-//
-    //Sign Up Collaps in login.php
-    $("#signUpFormCollaps").click(function () {
-        $(".collapse").collapse('toggle');
+window.friendsRequests = {};
+$(function () {
+    $.ajax({
+        type: 'GET',
+        url: "friends/friendsAPI.php",
+        data: {command: "get_requests"},
+        error: function (err) {
+            console.log("Error: " + err.status);
+        },
+        success: function (userData) {
+            userData = JSON.parse(userData);
+            window.friendsRequests.userData = userData;
+
+            $('#requestBadge').text(userData.length);
+
+        }
     });
-
-    $("#collapsePwd").click(function () {
-        $("#collapse1").collapse('toggle');
-    });
-
-   
 
 });
+
+
+
+console.dir(window.friendsRequests.userData);

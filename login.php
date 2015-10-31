@@ -153,6 +153,5 @@ if ($_SESSION['auth']) {
         <script src="js/lib/formValidation.min.js" type="text/javascript"></script>
         <script src="js/lib/bootstrap.FormValidation.js" type="text/javascript"></script>
         <script src="js/validation.js" type="text/javascript"></script>
-        <script src="js/scripts.js"></script>
     </body>
 </html>

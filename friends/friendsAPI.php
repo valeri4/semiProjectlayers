@@ -28,5 +28,9 @@ switch ($command) {
     case 'send_friend_request':
         echo send_request();
         break;
+    
+    case 'get_requests':
+        echo get_requests();
+        break;
     //default : redirect('../error.php');
 }
