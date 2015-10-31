@@ -177,7 +177,9 @@ $(function () {
     });
 
 
-
+    function view_friends_req(){
+        
+    }
 
     function allFriends() {
         alert('All Friends');
@@ -185,7 +187,25 @@ $(function () {
 
     function newFriendRequest() {
         $('#friendInfo').remove();
-        console.dir(window.friendsRequests.userData);
+        $.ajax({
+            type: 'GET',
+            url: "friends/friendsAPI.php",
+            data: {command: "get_friend_req_result"},
+            error: function (err) {
+                console.log("Error: " + err.status);
+            },
+            success: function (userData) {
+                console.dir(userData);
+                if(userData == 'no_requests'){
+                    $('#friendPostsBlock').html('<p>No friends Requests</p>');
+                }
+                userData = JSON.parse(userData);
+                $.each(){
+                    
+                }
+                console.dir(userData.length);
+            }
+        });
     }
 
 

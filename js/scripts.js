@@ -1,6 +1,4 @@
 
-
-window.friendsRequests = {};
 $(function () {
     $.ajax({
         type: 'GET',
@@ -10,9 +8,11 @@ $(function () {
             console.log("Error: " + err.status);
         },
         success: function (userData) {
+            if(userData == "no_requests"){
+                $('#requestBadge').text(0);
+            }
             userData = JSON.parse(userData);
-            window.friendsRequests.userData = userData;
-
+         
             $('#requestBadge').text(userData.length);
 
         }
@@ -21,5 +21,3 @@ $(function () {
 });
 
 
-
-console.dir(window.friendsRequests.userData);

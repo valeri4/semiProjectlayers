@@ -161,9 +161,30 @@ function get_requests() {
         //Remnove user ID
         unset($result_query -> u_uID);
         
+        
+        $_SESSION['friends_req_count'] = $count;
+        $_SESSION["friend_$count"] = $result_query; 
+        
         $resultArr[] = $result_query;
     }
     
+    
+    return json_encode($resultArr);
+}
+
+
+function get_friends_req_result(){
+    if(isset($_SESSION['friends_req_count']) == false){
+        return 'no_requests';
+    }
+    
+    $count = $_SESSION['friends_req_count'];
+    
+    $resultArr = [];
+    
+    for($i = 1; $i <= $count; $i++){
+        $resultArr[] = $_SESSION["friend_$i"];
+    }
     
     return json_encode($resultArr);
 }

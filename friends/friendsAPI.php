@@ -29,6 +29,10 @@ switch ($command) {
         echo send_request();
         break;
     
+    case 'get_friend_req_result':
+        echo get_friends_req_result();
+        break;
+    
     case 'get_requests':
         echo get_requests();
         break;
