@@ -74,21 +74,13 @@ require_once 'includes/header.php';
 
     <!-- main col right -->
     <div class="col-sm-7">
-
-
         <div class="panel panel-default">
-
-
-                        <div id='friendPostsBlock'>
-
-                        </div>
+            <div id='friendPostsBlock'>
 
             </div>
-
-
-
         </div>
-        <?php
+    </div>
+    <?php
 
-        require_once './includes/footer.php';
-        
+    require_once './includes/footer.php';
+    

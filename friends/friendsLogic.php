@@ -70,6 +70,7 @@ function get_friend_data($friend_user_name) {
     $ps->fetch();
 
     if (!$user_name_check_exist) {
+        $_SESSION['friend_id'] = null;
         return 'user_not_exist';
     }
     
@@ -86,7 +87,7 @@ function get_friend_data($friend_user_name) {
     /*     * ********* Check if frinds ************** */
     $connection = connect();
     if (!$ps = $connection->prepare("select 
-                                    u.u_id, u.u_uID, u_f_name, u_l_name, u_about, u_gender, u_image, u_b_day
+                                    u.u_id, u.u_uID, u_f_name, u_l_name, u_about, u_gender, u_image, u_b_day, u_userName
                                     from users  as u
                                     join relationships as r
                                     on u.u_id = r.u_id where r.u_id = ? and friend_id = ?
@@ -97,7 +98,7 @@ function get_friend_data($friend_user_name) {
     if (!$ps->execute()) {
         return FALSE;
     }
-    $ps->bind_result($friend_u_id, $friend_u_uID, $friend_first_name, $friend_last_name, $friend_about, $friend_gender, $friend_image, $friend_birthdate);
+    $ps->bind_result($friend_u_id, $friend_u_uID, $friend_first_name, $friend_last_name, $friend_about, $friend_gender, $friend_image, $friend_birthdate, $friend_user_name);
     $ps->fetch();
     $ps->close();
     $connection->close();
@@ -107,20 +108,21 @@ function get_friend_data($friend_user_name) {
     //If not friends -> get user data
     if (!$friend_u_id) {
         $connection = connect();
-        if (!$ps = $connection->prepare("select u_id, u_uID, u_f_name, u_l_name, u_about, u_gender, u_image, u_b_day from users where u_id = ?")) {
+        if (!$ps = $connection->prepare("select u_id, u_uID, u_f_name, u_l_name, u_about, u_gender, u_image, u_b_day, u_userName from users where u_id = ?")) {
             return FALSE;
         }
         $ps->bind_param("i", $user_name_check_exist);
         if (!$ps->execute()) {
             return FALSE;
         }
-        $ps->bind_result($friend_u_id, $friend_u_uID, $friend_first_name, $friend_last_name, $friend_about, $friend_gender, $friend_image, $friend_birthdate);
+        $ps->bind_result($friend_u_id, $friend_u_uID, $friend_first_name, $friend_last_name, $friend_about, $friend_gender, $friend_image, $friend_birthdate, $friend_user_name);
         $ps->fetch();
         $ps->close();
         $connection->close();
         
         $friend_birthdate = dateFormat($friend_birthdate);
         
+        $_SESSION['friend_id'] = null;
 
         if ($friend_image != 'def_img') {
             $friend_image = md5($friend_u_uID);
@@ -134,6 +136,7 @@ function get_friend_data($friend_user_name) {
             'date' => $friend_birthdate,
             'gender' => $friend_gender,
             'user_image' => $friend_image,
+            'username' => $friend_user_name,
             'friends' => 0   
         ));
     }
@@ -154,6 +157,7 @@ function get_friend_data($friend_user_name) {
         'gender' => $friend_gender,
         'about' => $friend_about,
         'user_image' => $friend_image,
+        'username' => $friend_user_name,
         'friends' => 1   
     ));
 }

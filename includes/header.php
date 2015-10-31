@@ -39,7 +39,7 @@
                                     <span class="icon-bar"></span>
                                     <span class="icon-bar"></span>
                                 </button>
-                                <a href="/SemiProjectLayers/index.php" class="navbar-brand logo">FSN</a>
+                                <a href="index.php" class="navbar-brand logo">FSN</a>
                             </div>
                             <nav class="collapse navbar-collapse" role="navigation">
                                 <form class="navbar-form navbar-left">
@@ -52,7 +52,7 @@
                                 </form>
                                 <ul class="nav navbar-nav">
                                     <li>
-                                       <a href="#postModal" role="button" data-toggle="modal">New Friends <span class="badge ">0</span></a>
+                                       <a href="#dfdsf" role="button" data-toggle="modal">New Friends <span class="badge ">0</span></a>
                                     </li>
                                     <li>
                                        <a href="#postModal" role="button" data-toggle="modal">All Friends <span class="badge ">5</span></a>

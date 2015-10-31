@@ -9,6 +9,10 @@ switch ($command) {
     case "load_posts":
         echo json_encode(view_user_posts());
         break;
+    
+    case "load_frien_posts":
+        echo json_encode(view_friend_posts());
+        break;
 
 
     case "add_post":

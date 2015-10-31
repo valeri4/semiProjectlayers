@@ -82,3 +82,20 @@ function view_user_posts() {
 
     return get_array($sql);
 }
+
+
+
+function view_friend_posts() {
+    if (!$u_id = $_SESSION['friend_id']) {
+        return "not_friends";
+    }
+
+    $sql = "SELECT p_post, p_time FROM posts WHERE u_id = $u_id  ORDER BY p_time DESC";
+
+
+    if (!get_array($sql)) {
+        return FALSE;
+    }
+
+    return get_array($sql);
+}
