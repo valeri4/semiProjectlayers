@@ -63,7 +63,7 @@ require_once 'includes/header.php';
 
         <div class="panel panel-default">
             <div class="panel-heading"><h4>About me:</h4></div>
-            <div class="panel-body">
+            <div class="panel-body" id="aboutBlock">
                 <p class="aboutMeBody"></p>
             </div>
         </div>
@@ -80,6 +80,26 @@ require_once 'includes/header.php';
             </div>
         </div>
     </div>
+
+
+
+
+    <div class="modal fade" id="requestModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Request Satus</h4>
+                </div>
+                <div class="modal-body" id="requestModalBody">
+                    <p>Request was sent</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
     <?php
 
     require_once './includes/footer.php';

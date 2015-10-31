@@ -11,9 +11,10 @@ $(function () {
     console.dir(userName);
 
 
+
     /****** View Profile and Posts if URL has username ******/
 
-    if (userName) {
+    function friendUser(userName) {
 
         /**************************
          * View Friend Posts
@@ -38,7 +39,7 @@ $(function () {
 
 
         function notFriends() {
-            $('#friendPostsBlock').html("To see " + firstName + " " + lastName + "'s posts you must be a friends. Add  <a href='#dfsd'>" + firstName + " " + lastName + "</a>to friends");
+            $('#friendPostsBlock').html("To see " + firstName + " " + lastName + "'s posts you must be a friends. Add  <a href='#addToFriends'>" + firstName + " " + lastName + "</a>to friends");
         }
 
         function viewPosts(postDate, postText) {
@@ -137,4 +138,50 @@ $(function () {
         });
     }
 
+
+    function send_friend_request() {
+        $.ajax({
+            type: 'GET',
+            url: "friends/friendsAPI.php",
+            data: {command: "send_friend_request"},
+            error: function (err) {
+                console.log("Error: " + err.status);
+            },
+            success: function (userData) {
+                if(userData){
+                    alert('Request Sended');
+                }else{
+                    alert('Error Send Request');
+                }
+            }
+        });
+    }
+    
+    
+    $('#friendPostsBlock, #aboutBlock').on('click', 'a[href*="addToFriends"]', function(){
+        //alert('addToFriends clicked');
+        $('#requestModal').modal('show');
+    });
+    
+
+
+
+    function allFriends() {
+        alert('All Friends');
+    }
+
+    function newFriendRequest() {
+        alert('New Friend Request');
+    }
+
+
+
+    if (userName == 'allfriends') {
+        allFriends();
+    }
+    if (userName == 'newFriend') {
+        newFriendRequest();
+    } else {
+        friendUser(userName);
+    }
 });

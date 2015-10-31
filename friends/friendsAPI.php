@@ -12,7 +12,7 @@ switch ($command) {
         $friend_user_name = $_GET['username'];
         $result = get_friend_data($friend_user_name);
         if(!$result){
-            redirect('../error.php');
+            echo FALSE;
             break;
         }
         
@@ -22,6 +22,11 @@ switch ($command) {
         }
         
         echo $result;
+        break;
+        
+        
+    case 'send_friend_request':
+        echo send_request();
         break;
     //default : redirect('../error.php');
 }

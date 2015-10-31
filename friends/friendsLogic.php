@@ -48,12 +48,12 @@ session_start();
 
 function get_friend_data($friend_user_name) {
     $u_id = $_SESSION['u_id'];
-    
+
 
     $friend_user_name = addslashes($friend_user_name);
     $friend_user_name = strip_tags($friend_user_name);
     $friend_user_name_length = strlen($friend_user_name);
-    if ($friend_user_name_length < 3 || $friend_user_name_length > 20) {
+    if ($friend_user_name_length == 0 || $friend_user_name_length > 20) {
         return FALSE;
     }
 
@@ -73,8 +73,8 @@ function get_friend_data($friend_user_name) {
         $_SESSION['friend_id'] = null;
         return 'user_not_exist';
     }
-    
-    if($user_name_check_exist == $u_id){
+
+    if ($user_name_check_exist == $u_id) {
         return 'self';
     }
 
@@ -104,7 +104,7 @@ function get_friend_data($friend_user_name) {
     $connection->close();
 
     $friend_birthdate = dateFormat($friend_birthdate);
-    
+
     //If not friends -> get user data
     if (!$friend_u_id) {
         $connection = connect();
@@ -119,10 +119,11 @@ function get_friend_data($friend_user_name) {
         $ps->fetch();
         $ps->close();
         $connection->close();
-        
+
         $friend_birthdate = dateFormat($friend_birthdate);
-        
+
         $_SESSION['friend_id'] = null;
+        $_SESSION['friend_search_id'] = $friend_u_id;
 
         if ($friend_image != 'def_img') {
             $friend_image = md5($friend_u_uID);
@@ -137,11 +138,11 @@ function get_friend_data($friend_user_name) {
             'gender' => $friend_gender,
             'user_image' => $friend_image,
             'username' => $friend_user_name,
-            'friends' => 0   
+            'friends' => 0
         ));
     }
 
-    
+
     $_SESSION['friend_id'] = $friend_u_id;
 
     if ($friend_image != 'def_img') {
@@ -158,7 +159,7 @@ function get_friend_data($friend_user_name) {
         'about' => $friend_about,
         'user_image' => $friend_image,
         'username' => $friend_user_name,
-        'friends' => 1   
+        'friends' => 1
     ));
 }
 
@@ -170,21 +171,31 @@ function get_friend_data($friend_user_name) {
 function send_request() {
 
     $u_id = $_SESSION['u_id'];
+
+    if (!$_SESSION['friend_search_id']) {
+        return FALSE;
+    }
     $friend_id = $_SESSION['friend_search_id'];
 
-    $connection = connect();
-    if (!$ps = $connection->prepare("insert into friend_request (req_u_id, req_friend_id) values( ?, ?)")) {
+
+    $sql = "SELECT req_id FROM friend_request 
+            WHERE (req_u_id = $u_id and req_friend_id = $friend_id) 
+            or (req_u_id = $friend_id and req_friend_id = $u_id)";
+    $result = get_object($sql);
+
+    if ($result) {
         return FALSE;
     }
-    $ps->bind_param("ii", $u_id, $friend_id);
-    if (!$ps->execute()) {
-        return FALSE;
-    }
-    $ps->close();
-    $connection->close();
+
+    $sql = "INSERT INTO friend_request (req_u_id, req_friend_id) VALUES ($u_id, $friend_id)";
+    get_object($sql);
+
+    $_SESSION['friend_search_id'] = null;
 
     return TRUE;
 }
+
+var_dump(send_request());
 
 function accept_request() {
     
