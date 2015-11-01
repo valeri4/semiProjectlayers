@@ -8,15 +8,20 @@ $(function () {
             console.log("Error: " + err.status);
         },
         success: function (userData) {
-            if (userData == "no_requests") {
-                $('#requestBadge').text(0);
-            }
-            if (userData == '[null]') {
-                $('#requestBadge').text(0);
-            } else {
-                userData = JSON.parse(userData);
 
-                $('#requestBadge').text(userData.length);
+            switch (userData) {
+                case 'no_requests':
+                    $('#requestBadge').text(0);
+                    break;
+
+                case '[null]':
+                    $('#requestBadge').text(0);
+                    break;
+
+                default:
+                    userData = JSON.parse(userData);
+
+                    $('#requestBadge').text(userData.length);
             }
         }
     });

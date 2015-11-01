@@ -42,5 +42,10 @@ switch ($command) {
         $note_id = $_POST['note_id'];
         echo accept_request($friend_user_name, $note_id);
         break;
+    
+    
+    case 'get_all_friends':
+        echo get_all_friends();
+        break;
     //default : redirect('../error.php');
 }

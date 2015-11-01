@@ -5,10 +5,6 @@ require_once '../includes/helpers.php';
 
 session_start();
 
-
-
-
-
 function get_friend_data($friend_user_name) {
     $u_id = $_SESSION['u_id'];
 
@@ -137,8 +133,8 @@ function get_requests() {
     $sql = "select req_u_id from friend_request where req_friend_id = $u_id";
 
     $result = get_array($sql);
-    
-    if(!$result){
+
+    if (!$result) {
         return 'no_requests';
     }
 
@@ -163,47 +159,36 @@ function get_requests() {
         } else {
             $result_query->u_image = 'def_img';
         }
-        
+
         //Remnove user ID
-        unset($result_query -> u_uID);
-        
-        
+        unset($result_query->u_uID);
+
+
         $_SESSION['friends_req_count'] = $count;
-        $_SESSION["friend_$count"] = $result_query; 
-        
+        $_SESSION["friend_$count"] = $result_query;
+
         $resultArr[] = $result_query;
     }
-    
-    
+
+
     return json_encode($resultArr);
 }
 
-
-
-
-
-
-
-function get_friends_req_result(){
-    if(isset($_SESSION['friends_req_count']) == false){
+function get_friends_req_result() {
+    if (isset($_SESSION['friends_req_count']) == false) {
         return 'no_requests';
     }
-    
+
     $count = $_SESSION['friends_req_count'];
-    
+
     $resultArr = [];
-    
-    for($i = 1; $i <= $count; $i++){
+
+    for ($i = 1; $i <= $count; $i++) {
         $resultArr[] = $_SESSION["friend_$i"];
     }
-    
+
     return json_encode($resultArr);
 }
-
-
-
-
-
 
 function send_request() {
 
@@ -233,13 +218,13 @@ function send_request() {
 }
 
 function accept_request($friend_user_name, $note_id) {
-     $u_id = $_SESSION['u_id'];
+    $u_id = $_SESSION['u_id'];
 
 
     $note_id = addslashes($note_id);
     $note_id = strip_tags($note_id);
 
-    
+
     $friend_user_name = addslashes($friend_user_name);
     $friend_user_name = strip_tags($friend_user_name);
     $friend_user_name_length = strlen($friend_user_name);
@@ -247,7 +232,7 @@ function accept_request($friend_user_name, $note_id) {
         return FALSE;
     }
 
-    
+
     /*     * ********* Check if user exist Start     ************** */
     $connection = connect();
     if (!$ps = $connection->prepare("SELECT u_id FROM users where u_userName = ?")) {
@@ -267,18 +252,73 @@ function accept_request($friend_user_name, $note_id) {
 
     $ps->close();
     $connection->close();
-    
+
     $sql = "insert into relationships (u_id, friend_id) values ($u_id, $friend_id), ($friend_id, $u_id)";
     insert($sql);
-    
+
     $sql = "delete from friend_request 
             where (req_u_id = $u_id and req_friend_id = $friend_id) 
             or (req_u_id = $friend_id and req_friend_id = $u_id) ";
-    
+
     delete($sql);
-    
+
     unset($_SESSION["friend_$note_id"]);
     $_SESSION['friends_req_count'] = -1;
-    
+
     return TRUE;
+}
+
+function get_all_friends() {
+    $u_id = $_SESSION['u_id'];
+
+    $sql = "select u.u_uID, u_f_name, u_l_name, u_image, u_userName
+              from users  as u
+              join relationships as r
+              on u.u_id = r.u_id where friend_id = $u_id";
+
+    $result = get_array($sql);
+
+    if (!$result) {
+        return 'no_friends_to_view';
+    }
+
+    $requestsArr = [];
+
+    //Get user Image and unset u_uID after image check
+    foreach ($result as $obj) {
+        $u_uID = $obj->u_uID;
+        $userImg = $obj->u_image;
+
+        if ($userImg != 'def_img') {
+            $obj->u_image = md5($u_uID);
+        } else {
+            $userImg = 'def_img';
+        }
+
+        unset($obj->u_uID);
+    }
+
+    return json_encode($result);
+}
+
+function delete_friend($friend_username) {
+    $u_id = $_SESSION['u_id'];
+
+
+    $connection = connect();
+    if (!$ps = $connection->prepare("select u.u_id
+    from users  as u
+    join relationships as r
+    on u.u_id = r.u_id where friend_id = 67 and u.u_userName = 'new'
+                                    ")) {
+        return FALSE;
+    }
+    $ps->bind_param("ii", $user_name_check_exist, $u_id);
+    if (!$ps->execute()) {
+        return FALSE;
+    }
+    $ps->bind_result($friend_u_id, $friend_u_uID, $friend_first_name, $friend_last_name, $friend_about, $friend_gender, $friend_image, $friend_birthdate, $friend_user_name);
+    $ps->fetch();
+    $ps->close();
+    $connection->close();
 }
