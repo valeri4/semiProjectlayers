@@ -173,17 +173,49 @@ $(function () {
     }
 
 
+
+    /**********  Send Request        *****************************************/
     $('#friendPostsBlock, #aboutBlock').on('click', 'a[href*="addToFriends"]', function () {
         send_friend_request();
     });
 
 
-    
-    $('#friendPostsBlock').on('click', 'a[href*="accept"]', function(){
-        console.dir($(this).parent().remove());
+    /**********  Accept Request        *****************************************/
+    $('#friendPostsBlock').on('click', 'a[href*="accept"]', function () {
+        note_id = $(this).parent().attr('id');
+        note_id = note_id.slice(7);
+        note_id = parseInt(note_id) + 1;
+
+        username = $(this).attr('id');
+
+        console.dir(note_id);
+        console.dir(username);
+
+        $.ajax({
+            type: 'POST',
+            url: "friends/friendsAPI.php",
+            data: {command: "accept_request", username: username, note_id: note_id},
+            error: function (err) {
+                console.log("Error: " + err.status);
+            },
+            success: function (userData) {
+                if (userData == true) {
+                    $('#requestModal').modal('show');
+                    $('#requestModalBody p').text(username + ' was appended to friends list');
+                    $(this).parent().remove();
+                }
+                if (userData == false) {
+                    $('#requestModal').modal('show');
+                    $('#requestModalBody p').text('Error: Can\'t to append ' + username + ' to friends list');
+                }
+            }
+        });
+
+
     });
 
 
+    /**********  View All Reauests        *****************************************/
     function view_friends_req(count, firstName, lastName, userImg, userName) {
 
         if (userImg != 'def_img') {
@@ -192,7 +224,7 @@ $(function () {
             imgSrc = "profileImg/man.jpg";
         }
 
-        $('#friendPostsBlock').append("<div id='friend_" + count + "' class='friend_req_user'><img src='" + imgSrc + "' alt='User Image' height='50' width='50'/><p><a href='friends.php?"+ userName+"'>" + firstName + " " + lastName + "</a></p><a href='#accept_" + userName + "' class='btn btn-xs btn-success reqAccept' id='" + userName + "'>Accept</a><a href='#Ignore_" + userName + "' class='btn btn-xs btn-danger reqIgnore' id='" + userName + "'>Ignore</a></div>");
+        $('#friendPostsBlock').append("<div id='friend_" + count + "' class='friend_req_user'><img src='" + imgSrc + "' alt='User Image' height='50' width='50'/><p><a href='friends.php?" + userName + "'>" + firstName + " " + lastName + "</a></p><a href='#accept_" + userName + "' class='btn btn-xs btn-success reqAccept' id='" + userName + "'>Accept</a><a href='#Ignore_" + userName + "' class='btn btn-xs btn-danger reqIgnore' id='" + userName + "'>Ignore</a></div>");
     }
 
 
@@ -213,17 +245,19 @@ $(function () {
                 if (userData == 'no_requests') {
                     $('#friendPostsBlock').html('<p>No friends Requests</p>');
                 }
-                userData = JSON.parse(userData);
-                for (i = 0; i < userData.length; i++) {
-                    console.dir(userData[i]);
-                    firstName = userData[i].u_f_name;
-                    lastName = userData[i].u_l_name;
-                    userImg = userData[i].u_image;
-                    userName = userData[i].u_userName;
-
-                    view_friends_req(i, firstName, lastName, userImg, userName);
+                if (userData == '[null]') {
+                    $('#friendPostsBlock').html('<p>No friends Requests</p>');
+                }else {
+                    userData = JSON.parse(userData);
+                    for (i = 0; i < userData.length; i++) {
+                        console.dir(userData[i]);
+                        firstName = userData[i].u_f_name;
+                        lastName = userData[i].u_l_name;
+                        userImg = userData[i].u_image;
+                        userName = userData[i].u_userName;
+                        view_friends_req(i, firstName, lastName, userImg, userName);
+                    }
                 }
-
 
                 console.dir(userData.length);
             }

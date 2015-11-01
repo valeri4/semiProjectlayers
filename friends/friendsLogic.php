@@ -271,13 +271,14 @@ function accept_request($friend_user_name, $note_id) {
     $sql = "insert into relationships (u_id, friend_id) values ($u_id, $friend_id), ($friend_id, $u_id)";
     insert($sql);
     
-    $sql = "FROM friend_request 
-            WHERE (req_u_id = $u_id and req_friend_id = $friend_id) 
+    $sql = "delete from friend_request 
+            where (req_u_id = $u_id and req_friend_id = $friend_id) 
             or (req_u_id = $friend_id and req_friend_id = $u_id) ";
     
     delete($sql);
     
     unset($_SESSION["friend_$note_id"]);
+    $_SESSION['friends_req_count'] = -1;
     
     return TRUE;
 }

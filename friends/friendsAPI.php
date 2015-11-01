@@ -40,7 +40,7 @@ switch ($command) {
     case 'accept_request':
         $friend_user_name = $_POST['username'];
         $note_id = $_POST['note_id'];
-        echo accept_request();
+        echo accept_request($friend_user_name, $note_id);
         break;
     //default : redirect('../error.php');
 }

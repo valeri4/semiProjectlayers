@@ -8,13 +8,16 @@ $(function () {
             console.log("Error: " + err.status);
         },
         success: function (userData) {
-            if(userData == "no_requests"){
+            if (userData == "no_requests") {
                 $('#requestBadge').text(0);
             }
-            userData = JSON.parse(userData);
-         
-            $('#requestBadge').text(userData.length);
+            if (userData == '[null]') {
+                $('#requestBadge').text(0);
+            } else {
+                userData = JSON.parse(userData);
 
+                $('#requestBadge').text(userData.length);
+            }
         }
     });
 
