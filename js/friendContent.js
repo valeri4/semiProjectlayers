@@ -139,6 +139,9 @@ $(function () {
     }
 
 
+
+
+
     function send_friend_request() {
         $.ajax({
             type: 'GET',
@@ -171,19 +174,30 @@ $(function () {
 
 
     $('#friendPostsBlock, #aboutBlock').on('click', 'a[href*="addToFriends"]', function () {
-        //alert('addToFriends clicked');
-
         send_friend_request();
     });
 
 
-    function view_friends_req(){
-        
+    
+    $('#friendPostsBlock').on('click', 'a[href*="accept"]', function(){
+        console.dir($(this).parent().remove());
+    });
+
+
+    function view_friends_req(count, firstName, lastName, userImg, userName) {
+
+        if (userImg != 'def_img') {
+            imgSrc = 'profileImg/' + userImg + '.png';
+        } else {
+            imgSrc = "profileImg/man.jpg";
+        }
+
+        $('#friendPostsBlock').append("<div id='friend_" + count + "' class='friend_req_user'><img src='" + imgSrc + "' alt='User Image' height='50' width='50'/><p><a href='friends.php?"+ userName+"'>" + firstName + " " + lastName + "</a></p><a href='#accept_" + userName + "' class='btn btn-xs btn-success reqAccept' id='" + userName + "'>Accept</a><a href='#Ignore_" + userName + "' class='btn btn-xs btn-danger reqIgnore' id='" + userName + "'>Ignore</a></div>");
     }
 
-    function allFriends() {
-        alert('All Friends');
-    }
+
+
+
 
     function newFriendRequest() {
         $('#friendInfo').remove();
@@ -196,18 +210,29 @@ $(function () {
             },
             success: function (userData) {
                 console.dir(userData);
-                if(userData == 'no_requests'){
+                if (userData == 'no_requests') {
                     $('#friendPostsBlock').html('<p>No friends Requests</p>');
                 }
                 userData = JSON.parse(userData);
-                $.each(){
-                    
+                for (i = 0; i < userData.length; i++) {
+                    console.dir(userData[i]);
+                    firstName = userData[i].u_f_name;
+                    lastName = userData[i].u_l_name;
+                    userImg = userData[i].u_image;
+                    userName = userData[i].u_userName;
+
+                    view_friends_req(i, firstName, lastName, userImg, userName);
                 }
+
+
                 console.dir(userData.length);
             }
         });
     }
 
+    function allFriends() {
+        alert('All Friends');
+    }
 
     if (userName == 'allfriends') {
         allFriends();

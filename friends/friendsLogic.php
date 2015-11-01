@@ -6,9 +6,11 @@ require_once '../includes/helpers.php';
 session_start();
 
 
+
+
+
 function get_friend_data($friend_user_name) {
     $u_id = $_SESSION['u_id'];
-
 
     $friend_user_name = addslashes($friend_user_name);
     $friend_user_name = strip_tags($friend_user_name);
@@ -41,8 +43,6 @@ function get_friend_data($friend_user_name) {
     $ps->close();
     $connection->close();
     /*     * ********* Check if user exist End    ************** */
-
-
 
     /*     * ********* Check if frinds ************** */
     $connection = connect();
@@ -125,6 +125,12 @@ function get_friend_data($friend_user_name) {
 
 //var_dump(get_friend_data("tet"));
 
+
+
+
+
+
+
 function get_requests() {
     $u_id = $_SESSION['u_id'];
 
@@ -149,7 +155,7 @@ function get_requests() {
     //Get array of users info who send request
     foreach ($requestsArr as $val) {
         $count++;
-        $sql = "select u_uID, u_f_name, u_l_name, u_image from users where u_id = $val";
+        $sql = "select u_uID, u_f_name, u_l_name, u_image, u_userName from users where u_id = $val";
         $result_query = get_object($sql);
 
         if ($result_query->u_image != 'def_img') {
@@ -173,6 +179,11 @@ function get_requests() {
 }
 
 
+
+
+
+
+
 function get_friends_req_result(){
     if(isset($_SESSION['friends_req_count']) == false){
         return 'no_requests';
@@ -188,6 +199,9 @@ function get_friends_req_result(){
     
     return json_encode($resultArr);
 }
+
+
+
 
 
 
@@ -218,6 +232,52 @@ function send_request() {
     return 'request_was_sent';
 }
 
-function accept_request() {
+function accept_request($friend_user_name, $note_id) {
+     $u_id = $_SESSION['u_id'];
+
+
+    $note_id = addslashes($note_id);
+    $note_id = strip_tags($note_id);
+
     
+    $friend_user_name = addslashes($friend_user_name);
+    $friend_user_name = strip_tags($friend_user_name);
+    $friend_user_name_length = strlen($friend_user_name);
+    if ($friend_user_name_length == 0 || $friend_user_name_length > 20) {
+        return FALSE;
+    }
+
+    
+    /*     * ********* Check if user exist Start     ************** */
+    $connection = connect();
+    if (!$ps = $connection->prepare("SELECT u_id FROM users where u_userName = ?")) {
+        return FALSE;
+    }
+    $ps->bind_param("s", $friend_user_name);
+    if (!$ps->execute()) {
+        return FALSE;
+    }
+    $ps->bind_result($friend_id);
+    $ps->fetch();
+
+
+    if ($friend_id == $u_id) {
+        return FALSE;
+    }
+
+    $ps->close();
+    $connection->close();
+    
+    $sql = "insert into relationships (u_id, friend_id) values ($u_id, $friend_id), ($friend_id, $u_id)";
+    insert($sql);
+    
+    $sql = "FROM friend_request 
+            WHERE (req_u_id = $u_id and req_friend_id = $friend_id) 
+            or (req_u_id = $friend_id and req_friend_id = $u_id) ";
+    
+    delete($sql);
+    
+    unset($_SESSION["friend_$note_id"]);
+    
+    return TRUE;
 }

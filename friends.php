@@ -6,7 +6,8 @@ require_once 'includes/header.php';
 
 
 //var_dump($_SESSION['friends_req_count']);
-//var_dump($_SESSION['friend_1']);
+var_dump($_SESSION['friend_1']);
+var_dump($_SESSION['friend_2']);
 //var_dump($_SESSION['u_id']);
 //var_dump($_SESSION['uuID']);
 //var_dump($_SESSION['user_image']);

@@ -5,6 +5,29 @@ html, body {
     color:#555555;
 }
 
+.friend_req_user p{
+    display: inline-block;
+    position: relative;
+    top: 15px;
+    margin: 15px;
+}
+
+.friend_req_user .btn{
+    position: relative;
+    top: 10px;
+    margin: 5px;
+}
+
+.friend_req_user p a{
+    color: #3B5999;
+    font-weight: 800;
+    text-decoration: underline;
+}
+
+.friend_req_user{
+    margin: 15px;
+}
+
 
 #friendPostsBlock{
     margin: 10px 15px;
