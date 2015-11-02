@@ -47,5 +47,10 @@ switch ($command) {
     case 'get_all_friends':
         echo get_all_friends();
         break;
+    
+    case 'delete_friend':
+        $friend_user_name = $_POST['username'];
+        echo delete_friend($friend_user_name);
+        break;
     //default : redirect('../error.php');
 }

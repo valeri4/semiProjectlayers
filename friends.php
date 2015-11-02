@@ -44,8 +44,9 @@ require_once 'includes/header.php';
     <!-- main col right -->
     <div class="col-sm-7">
         <div class="panel panel-default">
-            <div id='friendPostsBlock'>
 
+            <div id='friendPostsBlock'>
+                <div id="friendsContenHeader"><h3></h3></div>
             </div>
         </div>
     </div>
@@ -58,10 +59,10 @@ require_once 'includes/header.php';
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Request Satus</h4>
+                    <h4 class="modal-title" id="modalHeader">Request Satus</h4>
                 </div>
                 <div class="modal-body" id="requestModalBody">
-                    <p></p>
+                    <p class="modalContent"></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

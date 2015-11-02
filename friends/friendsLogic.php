@@ -5,6 +5,8 @@ require_once '../includes/helpers.php';
 
 session_start();
 
+
+
 function get_friend_data($friend_user_name) {
     $u_id = $_SESSION['u_id'];
 
@@ -190,6 +192,10 @@ function get_friends_req_result() {
     return json_encode($resultArr);
 }
 
+
+
+
+
 function send_request() {
 
     $u_id = $_SESSION['u_id'];
@@ -216,6 +222,11 @@ function send_request() {
 
     return 'request_was_sent';
 }
+
+
+
+
+
 
 function accept_request($friend_user_name, $note_id) {
     $u_id = $_SESSION['u_id'];
@@ -268,6 +279,10 @@ function accept_request($friend_user_name, $note_id) {
     return TRUE;
 }
 
+
+
+
+
 function get_all_friends() {
     $u_id = $_SESSION['u_id'];
 
@@ -301,24 +316,47 @@ function get_all_friends() {
     return json_encode($result);
 }
 
+
+
+
+
+
+
 function delete_friend($friend_username) {
     $u_id = $_SESSION['u_id'];
 
+    $friend_username = addslashes($friend_username);
+    $friend_username = strip_tags($friend_username);
 
     $connection = connect();
     if (!$ps = $connection->prepare("select u.u_id
-    from users  as u
-    join relationships as r
-    on u.u_id = r.u_id where friend_id = 67 and u.u_userName = 'new'
-                                    ")) {
+                                     from users  as u
+                                     join relationships as r
+                                     on u.u_id = r.u_id where friend_id = ? and u.u_userName = ? ")) {
         return FALSE;
     }
-    $ps->bind_param("ii", $user_name_check_exist, $u_id);
+    $ps->bind_param("is", $u_id, $friend_username);
     if (!$ps->execute()) {
         return FALSE;
     }
-    $ps->bind_result($friend_u_id, $friend_u_uID, $friend_first_name, $friend_last_name, $friend_about, $friend_gender, $friend_image, $friend_birthdate, $friend_user_name);
+    $ps->bind_result($friend_id);
     $ps->fetch();
     $ps->close();
     $connection->close();
+    
+    if(!$friend_id){
+        return "user_not_exist";
+    }
+    
+    $sql = "delete from relationships
+            where (u_id = $u_id and friend_id = $friend_id) 
+            or (u_id = $friend_id and friend_id = $u_id)";
+    $result = delete($sql);
+    
+    if($result != 2){
+        return 'delete_error';
+    }
+    
+    return 'user_deleted';
 }
+
