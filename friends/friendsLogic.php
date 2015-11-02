@@ -157,7 +157,7 @@ function get_requests() {
         $result_query = get_object($sql);
 
         if ($result_query->u_image != 'def_img') {
-            $result_query->u_uID = md5($result_query->u_uID);
+            $result_query->u_image = md5($result_query->u_uID);
         } else {
             $result_query->u_image = 'def_img';
         }
@@ -257,7 +257,7 @@ function accept_request($friend_user_name, $note_id) {
     $ps->fetch();
 
 
-    if ($friend_id == $u_id) {
+    if (!$friend_id || $friend_id == $u_id) {
         return FALSE;
     }
 
@@ -279,6 +279,8 @@ function accept_request($friend_user_name, $note_id) {
     return TRUE;
 }
 
+
+var_dump(accept_request('tet', 2));
 
 
 

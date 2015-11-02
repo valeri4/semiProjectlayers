@@ -22,6 +22,7 @@ html, body {
     position: relative;
     top: 15px;
     margin: 15px;
+    width: 200px;
 }
 
 .friend_req_user .btn{

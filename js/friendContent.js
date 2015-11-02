@@ -161,6 +161,13 @@ $(function () {
                     $('#requestModal').modal('show');
                     $('#requestModalBody p').text(username + ' was appended to friends list');
                     $('#' + note_idOrg).remove();
+                    bg = $('#requestBadge');
+                    if (bg.text() > 1) {
+                        bg.text(parseInt(bg.text()) - 1)
+                    } else {
+                        bg.text(0);
+                        noRequestsMsg('No New Friends');
+                    }
                 }
                 if (userData == false) {
                     $('#requestModal').modal('show');
@@ -208,8 +215,8 @@ $(function () {
      * View All Requests from Users
      * 
      **************************/
-    function noRequestsMsg() {
-        $('#friendPostsBlock').html('<p>No friends Requests</p>');
+    function headerMsg(msg) {
+        $('#friendsContenHeader h3').text(msg);
     }
 
     function view_friends_req(count, firstName, lastName, userImg, userName) {
@@ -225,6 +232,7 @@ $(function () {
 
     function newFriendRequest() {
         $('#friendInfo').remove();
+        headerMsg('New Friends:');
         $.ajax({
             type: 'GET',
             url: "friends/friendsAPI.php",
@@ -235,10 +243,10 @@ $(function () {
             success: function (userData) {
                 switch (userData) {
                     case 'no_requests':
-                        noRequestsMsg();
+                        headerMsg('No New Friends');
                         break;
                     case '[]':
-                        noRequestsMsg();
+                        headerMsg('No New Friends');
                         break;
                     default:
                         userData = JSON.parse(userData);
@@ -264,9 +272,11 @@ $(function () {
      * 
      **************************/
 
-
+     var countFriends2view = 0;
     function all_friends_view(count, firstName, lastName, userImg, userName) {
-
+        
+        countFriends2view++;
+        console.log(countFriends2view);
         if (userImg != 'def_img') {
             imgSrc = 'profileImg/' + userImg + '.png';
         } else {
@@ -286,22 +296,24 @@ $(function () {
                 console.log("Error: " + err.status);
             },
             success: function (userData) {
+
+                switch (userData) {
+                    case 'no_friends_to_view':
+                        headerMsg('You haven\'t friends');
+                        break;
+                    default:
+                        headerMsg('My Friends:')
+                        userData = JSON.parse(userData);
+                        for (i = 0; i < userData.length; i++) {
+                            console.dir(userData[i]);
+                            firstName = userData[i].u_f_name;
+                            lastName = userData[i].u_l_name;
+                            userImg = userData[i].u_image;
+                            userName = userData[i].u_userName;
+                            all_friends_view(i, firstName, lastName, userImg, userName);
+                        }
+                }
                 console.dir(userData);
-                if (userData == 'no_requests') {
-                    $('#friendPostsBlock').html('<p>You haven\'t friends</p>');
-                }
-                else {
-                    $('#friendsContenHeader h3').text('My Friends: ');
-                    userData = JSON.parse(userData);
-                    for (i = 0; i < userData.length; i++) {
-                        console.dir(userData[i]);
-                        firstName = userData[i].u_f_name;
-                        lastName = userData[i].u_l_name;
-                        userImg = userData[i].u_image;
-                        userName = userData[i].u_userName;
-                        all_friends_view(i, firstName, lastName, userImg, userName);
-                    }
-                }
 
                 console.dir(userData.length);
             }
@@ -354,6 +366,10 @@ $(function () {
                     default:
                         $('#' + userblock_id).remove();
                         deleteUserModal(userNameDel + " successfully deleted");
+                        countFriends2view--;
+                        if(countFriends2view == 0){
+                            headerMsg('You haven\'t friends');
+                        }
                 }
             }
         });
