@@ -37,17 +37,22 @@ switch ($command) {
         echo get_requests();
         break;
 
-    case 'accept_request':
+    case 'accept_ignore_request':
         $friend_user_name = $_POST['username'];
         $note_id = $_POST['note_id'];
-        echo accept_request($friend_user_name, $note_id);
+         
+        if (isset($_POST['ignore']) && $ignore = 'ignore') {
+            echo accept_ignore_request($friend_user_name, $note_id, $ignore);
+            break;
+        }
+
+        echo accept_ignore_request($friend_user_name, $note_id);
         break;
-    
-    
+
     case 'get_all_friends':
         echo get_all_friends();
         break;
-    
+
     case 'delete_friend':
         $friend_user_name = $_POST['username'];
         echo delete_friend($friend_user_name);

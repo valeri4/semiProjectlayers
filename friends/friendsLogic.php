@@ -5,8 +5,6 @@ require_once '../includes/helpers.php';
 
 session_start();
 
-
-
 function get_friend_data($friend_user_name) {
     $u_id = $_SESSION['u_id'];
 
@@ -192,10 +190,6 @@ function get_friends_req_result() {
     return json_encode($resultArr);
 }
 
-
-
-
-
 function send_request() {
 
     $u_id = $_SESSION['u_id'];
@@ -223,18 +217,18 @@ function send_request() {
     return 'request_was_sent';
 }
 
-
-
-
-
-
-function accept_request($friend_user_name, $note_id) {
+//Function for Adding or ignore new friend. var note_id -> num of friend in  $_SESSION. var command -> command to execute, add or ignore
+function accept_ignore_request($friend_user_name, $note_id, $command = null) {
     $u_id = $_SESSION['u_id'];
 
 
     $note_id = addslashes($note_id);
     $note_id = strip_tags($note_id);
 
+    if ($command != null) {
+        $command = addslashes($command);
+        $command = strip_tags($command);
+    }
 
     $friend_user_name = addslashes($friend_user_name);
     $friend_user_name = strip_tags($friend_user_name);
@@ -244,12 +238,15 @@ function accept_request($friend_user_name, $note_id) {
     }
 
 
-    /*     * ********* Check if user exist Start     ************** */
+    ///Check if exist request to me with sended username 
     $connection = connect();
-    if (!$ps = $connection->prepare("SELECT u_id FROM users where u_userName = ?")) {
+    if (!$ps = $connection->prepare("select u_id from users as u
+                                        join friend_request as f
+                                        on u_id = req_u_id where u_userName = ?
+                                        and req_friend_id = ?")) {
         return FALSE;
     }
-    $ps->bind_param("s", $friend_user_name);
+    $ps->bind_param("si", $friend_user_name, $u_id);
     if (!$ps->execute()) {
         return FALSE;
     }
@@ -257,15 +254,22 @@ function accept_request($friend_user_name, $note_id) {
     $ps->fetch();
 
 
-    if (!$friend_id || $friend_id == $u_id) {
+    //if request does not exist or 
+    if (!$friend_id) {
         return FALSE;
     }
 
     $ps->close();
     $connection->close();
 
-    $sql = "insert into relationships (u_id, friend_id) values ($u_id, $friend_id), ($friend_id, $u_id)";
-    insert($sql);
+    //if coommand ignore -> delete user request to me
+    if ($command != 'ignore') {
+        $sql = "insert into relationships (u_id, friend_id) values ($u_id, $friend_id), ($friend_id, $u_id)";
+        insert($sql);
+
+        $sql = "insert into new_friend_temp ( newf_u_id, newf_friend_id) values ($u_id, $friend_id)";
+        insert($sql);
+    }
 
     $sql = "delete from friend_request 
             where (req_u_id = $u_id and req_friend_id = $friend_id) 
@@ -279,9 +283,12 @@ function accept_request($friend_user_name, $note_id) {
     return TRUE;
 }
 
+//var_dump(accept_ignore_request('tet', 2));
 
-var_dump(accept_request('tet', 2));
 
+function get_new_friend_view(){
+    
+}
 
 
 
@@ -318,12 +325,6 @@ function get_all_friends() {
     return json_encode($result);
 }
 
-
-
-
-
-
-
 function delete_friend($friend_username) {
     $u_id = $_SESSION['u_id'];
 
@@ -345,20 +346,19 @@ function delete_friend($friend_username) {
     $ps->fetch();
     $ps->close();
     $connection->close();
-    
-    if(!$friend_id){
+
+    if (!$friend_id) {
         return "user_not_exist";
     }
-    
+
     $sql = "delete from relationships
             where (u_id = $u_id and friend_id = $friend_id) 
             or (u_id = $friend_id and friend_id = $u_id)";
     $result = delete($sql);
-    
-    if($result != 2){
+
+    if ($result != 2) {
         return 'delete_error';
     }
-    
+
     return 'user_deleted';
 }
-

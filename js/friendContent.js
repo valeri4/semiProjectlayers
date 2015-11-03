@@ -37,7 +37,7 @@ $(function () {
 
 
         function notFriends() {
-            $('#friendPostsBlock').html("Only friends can see this content. Add <a href='#addToFriends'>" + firstName + " " + lastName + "</a> to friends");
+            $('#friendPostsBlock').html("Only friends can see this content. <mark><a href='#addToFriends' class='addTofriendslink'>Add " + firstName + " " + lastName + "</a></mark> to friends");
         }
 
         function viewPosts(postDate, postText) {
@@ -141,41 +141,7 @@ $(function () {
     $('#friendPostsBlock, #aboutBlock').on('click', 'a[href*="addToFriends"]', function () {
         send_friend_request();
     });
-    /**********  Accept Request        *****************************************/
-    $('#friendPostsBlock').on('click', 'a[href*="accept"]', function () {
-        note_idOrg = $(this).parent().attr('id');
-        note_id = note_idOrg.slice(7);
-        note_id = parseInt(note_id) + 1;
-        username = $(this).attr('id');
-        console.dir(note_id);
-        console.dir(username);
-        $.ajax({
-            type: 'POST',
-            url: "friends/friendsAPI.php",
-            data: {command: "accept_request", username: username, note_id: note_id},
-            error: function (err) {
-                console.log("Error: " + err.status);
-            },
-            success: function (userData) {
-                if (userData == true) {
-                    $('#requestModal').modal('show');
-                    $('#requestModalBody p').text(username + ' was appended to friends list');
-                    $('#' + note_idOrg).remove();
-                    bg = $('#requestBadge');
-                    if (bg.text() > 1) {
-                        bg.text(parseInt(bg.text()) - 1)
-                    } else {
-                        bg.text(0);
-                        noRequestsMsg('No New Friends');
-                    }
-                }
-                if (userData == false) {
-                    $('#requestModal').modal('show');
-                    $('#requestModalBody p').text('Error: Can\'t to append ' + username + ' to friends list');
-                }
-            }
-        });
-    });
+
     function send_friend_request() {
         $.ajax({
             type: 'GET',
@@ -206,6 +172,73 @@ $(function () {
         });
     }
 
+
+    /**********  Execute Accept or Ignore       *****************************************/
+    function accept_ignore_request(username, note_id, note_idOrg, trueText, falseText, command) {
+        var command2Send;
+        
+        console.log(command);
+        if (command == 'accept') {
+            command2Send = {command: "accept_ignore_request", username: username, note_id: note_id};
+            
+        } else {
+            command2Send = {command: "accept_ignore_request", username: username, note_id: note_id, ignore: 'ignore'};
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: "friends/friendsAPI.php",
+            data: command2Send,
+            error: function (err) {
+                console.log("Error: " + err.status);
+            },
+            success: function (userData) {
+                if (userData == true) {
+                    $('#requestModal').modal('show');
+                    $('#requestModalBody p').text(username + trueText);
+                    $('#' + note_idOrg).remove();
+                    bg = $('#requestBadge');
+                    if (bg.text() > 1) {
+                        bg.text(parseInt(bg.text()) - 1)
+                    } else {
+                        bg.text(0);
+                        headerMsg('No New Friends');
+                    }
+                }
+                if (userData == false) {
+                    $('#requestModal').modal('show');
+                    $('#requestModalBody p').text(falseText + username);
+                }
+            }
+        });
+    }
+
+    /**********  Accept Request        *****************************************/
+    $('#friendPostsBlock').on('click', 'a[href*="accept"]', function () {
+        note_idOrg = $(this).parent().attr('id');
+        note_id = note_idOrg.slice(7);
+        note_id = parseInt(note_id) + 1;
+        username = $(this).attr('id');
+        trueText = ' was appended to friends list';
+        falseText = 'Error: Can\'t add to friends ';
+        command = 'accept';
+
+        accept_ignore_request(username, note_id, note_idOrg, trueText, falseText, command);
+
+    });
+
+    /**********  Ignore Request        *****************************************/
+    $('#friendPostsBlock').on('click', 'a[href*="Ignore_"]', function () {
+        note_idOrg = $(this).parent().attr('id');
+        note_id = note_idOrg.slice(7);
+        note_id = parseInt(note_id) + 1;
+        username = $(this).attr('id');
+        trueText = ' was ignored';
+        falseText = 'Error: Can\'t ignore ';
+        command = 'ignore';
+
+        accept_ignore_request(username, note_id, note_idOrg, trueText, falseText, command)
+    });
 
 
 
@@ -272,9 +305,9 @@ $(function () {
      * 
      **************************/
 
-     var countFriends2view = 0;
+    var countFriends2view = 0;
     function all_friends_view(count, firstName, lastName, userImg, userName) {
-        
+
         countFriends2view++;
         console.log(countFriends2view);
         if (userImg != 'def_img') {
@@ -367,7 +400,7 @@ $(function () {
                         $('#' + userblock_id).remove();
                         deleteUserModal(userNameDel + " successfully deleted");
                         countFriends2view--;
-                        if(countFriends2view == 0){
+                        if (countFriends2view == 0) {
                             headerMsg('You haven\'t friends');
                         }
                 }
