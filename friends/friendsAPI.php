@@ -57,5 +57,9 @@ switch ($command) {
         $friend_user_name = $_POST['username'];
         echo delete_friend($friend_user_name);
         break;
+    
+    case 'get_new_friend_view':
+        echo get_new_friend_view();
+        break;
     //default : redirect('../error.php');
 }

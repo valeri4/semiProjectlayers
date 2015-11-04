@@ -41,10 +41,7 @@ html, body {
     margin: 15px;
 }
 
-
-.addTofriendslink{
-    
-}
+.ui-autocomplete { z-index:2147483647; }
 
 #friendPostsBlock{
     margin: 10px 15px;

@@ -10,6 +10,7 @@
         <link href="css/bootstrap.3.5.min.css" rel="stylesheet" type="text/css"/>
         <link href="css/formValidation.min.css" rel="stylesheet" type="text/css"/>
         <link href="css/jquery-ui.css" rel="stylesheet" type="text/css"/>
+        <link href="css/jquery-ui-bootstrap.css" rel="stylesheet" type="text/css"/>
         <!--[if lt IE 9]>
             <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
@@ -19,6 +20,7 @@
         <!-- script references -->
         <script src="js/lib/jquery.js" type="text/javascript"></script>
         <script src="js/lib/bootstrap.min.js"></script>
+        <script src="js/lib/jquery-ui.js" type="text/javascript"></script>
         <script src="js/lib/jquery-ui.js" type="text/javascript"></script>
         <script src="js/scripts.js"></script>
     </head>
@@ -55,7 +57,7 @@
                                        <a href="friends.php?newFriend" role="button" data-toggle="modal">New Friends <span class="badge" id="requestBadge"></span></a>
                                     </li>
                                     <li>
-                                       <a href="friends.php?allfriends" role="button" data-toggle="modal">All Friends</a>
+                                       <a href="friends.php?allfriends" role="button" data-toggle="modal">All Friends <span class="badge" id="newFriends"></span></a>
                                     </li>
                                 </ul>
                                 <ul class="nav navbar-nav navbar-right">

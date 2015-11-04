@@ -176,11 +176,11 @@ $(function () {
     /**********  Execute Accept or Ignore       *****************************************/
     function accept_ignore_request(username, note_id, note_idOrg, trueText, falseText, command) {
         var command2Send;
-        
+
         console.log(command);
         if (command == 'accept') {
             command2Send = {command: "accept_ignore_request", username: username, note_id: note_id};
-            
+
         } else {
             command2Send = {command: "accept_ignore_request", username: username, note_id: note_id, ignore: 'ignore'};
         }
@@ -215,7 +215,7 @@ $(function () {
 
     /**********  Accept Request        *****************************************/
     $('#friendPostsBlock').on('click', 'a[href*="accept"]', function () {
-        note_idOrg = $(this).parent().attr('id');
+        note_idOrg = $(this).parent().parent().attr('id');
         note_id = note_idOrg.slice(7);
         note_id = parseInt(note_id) + 1;
         username = $(this).attr('id');
@@ -229,7 +229,7 @@ $(function () {
 
     /**********  Ignore Request        *****************************************/
     $('#friendPostsBlock').on('click', 'a[href*="Ignore_"]', function () {
-        note_idOrg = $(this).parent().attr('id');
+        note_idOrg = $(this).parent().parent.attr('id');
         note_id = note_idOrg.slice(7);
         note_id = parseInt(note_id) + 1;
         username = $(this).attr('id');
@@ -306,6 +306,8 @@ $(function () {
      **************************/
 
     var countFriends2view = 0;
+    countNewFriends2view = $('#newFriends').text();
+    console.log('new count: ' + countNewFriends2view);
     function all_friends_view(count, firstName, lastName, userImg, userName) {
 
         countFriends2view++;
@@ -316,7 +318,11 @@ $(function () {
             imgSrc = "profileImg/man.jpg";
         }
 
-        $('#friendPostsBlock').append("<div id='friend_" + count + "' class='friend_req_user'><img src='" + imgSrc + "' alt='User Image' height='50' width='50'/><p><a href='friends.php?" + userName + "'>" + firstName + " " + lastName + "</a></p><a href='#remove_" + userName + "' class='btn btn-xs btn-danger reqIgnore' id='" + userName + "'>Remove</a></div>");
+        $('#friendPostsBlock').append("<div id='friend_" + count + "' class='friend_req_user'><div class='newFriend'><img src='" + imgSrc + "' alt='User Image' height='50' width='50'/><p><a href='friends.php?" + userName + "'>" + firstName + " " + lastName + "</a></p><a href='#remove_" + userName + "' class='btn btn-xs btn-danger reqIgnore' id='" + userName + "'>Remove</a></div></div>");
+
+        if (countFriends2view <= countNewFriends2view) {
+            $('.newFriend').css({width: '360px', background: 'rgba(178, 255, 102, .3)'});
+        }
     }
 
     function allFriends() {
@@ -370,7 +376,7 @@ $(function () {
 
     $('#friendPostsBlock').on('click', 'a[href*="remove"]', function () {
 
-        userblock_id = $(this).parent().attr('id');
+        userblock_id = $(this).parent().parent().attr('id');
         userNameDel = $(this).attr('id');
 
         $('#modalHeader').text('Delete');

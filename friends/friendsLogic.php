@@ -286,11 +286,25 @@ function accept_ignore_request($friend_user_name, $note_id, $command = null) {
 //var_dump(accept_ignore_request('tet', 2));
 
 
-function get_new_friend_view(){
+function get_new_friend_view() {
+    $u_id = $_SESSION['u_id'];
+
+    $sql = "select newf_u_id from new_friend_temp where newf_friend_id = $u_id";
+
+    $result = get_array($sql);
+
+    if (!$result) {
+        return 'no_new_friends';
+    }
+
+    $count = 0;
+    //Get object of new friends
+    foreach ($result as $obj) {
+        $count++;
+    }
     
+    return $count;
 }
-
-
 
 function get_all_friends() {
     $u_id = $_SESSION['u_id'];
@@ -298,7 +312,7 @@ function get_all_friends() {
     $sql = "select u.u_uID, u_f_name, u_l_name, u_image, u_userName
               from users  as u
               join relationships as r
-              on u.u_id = r.u_id where friend_id = $u_id";
+              on u.u_id = r.u_id where friend_id = $u_id order by f_id desc";
 
     $result = get_array($sql);
 
