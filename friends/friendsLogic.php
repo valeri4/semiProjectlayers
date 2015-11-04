@@ -4,9 +4,9 @@ require_once '../includes/DAL.php';
 require_once '../includes/helpers.php';
 
 session_start();
+$u_id = $_SESSION['u_id'];
 
 function get_friend_data($friend_user_name) {
-    $u_id = $_SESSION['u_id'];
 
     $friend_user_name = addslashes($friend_user_name);
     $friend_user_name = strip_tags($friend_user_name);
@@ -128,7 +128,6 @@ function get_friend_data($friend_user_name) {
 
 
 function get_requests() {
-    $u_id = $_SESSION['u_id'];
 
     $sql = "select req_u_id from friend_request where req_friend_id = $u_id";
 
@@ -192,8 +191,6 @@ function get_friends_req_result() {
 
 function send_request() {
 
-    $u_id = $_SESSION['u_id'];
-
     if (!$_SESSION['friend_search_id']) {
         return 'no_friend_id';
     }
@@ -219,8 +216,6 @@ function send_request() {
 
 //Function for Adding or ignore new friend. var note_id -> num of friend in  $_SESSION. var command -> command to execute, add or ignore
 function accept_ignore_request($friend_user_name, $note_id, $command = null) {
-    $u_id = $_SESSION['u_id'];
-
 
     $note_id = addslashes($note_id);
     $note_id = strip_tags($note_id);
@@ -287,7 +282,6 @@ function accept_ignore_request($friend_user_name, $note_id, $command = null) {
 
 
 function get_new_friend_view() {
-    $u_id = $_SESSION['u_id'];
 
     $sql = "select newf_u_id from new_friend_temp where newf_friend_id = $u_id";
 
@@ -302,12 +296,11 @@ function get_new_friend_view() {
     foreach ($result as $obj) {
         $count++;
     }
-    
+
     return $count;
 }
 
 function get_all_friends() {
-    $u_id = $_SESSION['u_id'];
 
     $sql = "select u.u_uID, u_f_name, u_l_name, u_image, u_userName
               from users  as u
@@ -340,7 +333,6 @@ function get_all_friends() {
 }
 
 function delete_friend($friend_username) {
-    $u_id = $_SESSION['u_id'];
 
     $friend_username = addslashes($friend_username);
     $friend_username = strip_tags($friend_username);
@@ -376,3 +368,34 @@ function delete_friend($friend_username) {
 
     return 'user_deleted';
 }
+
+function autocomplete_search($search_input) {
+    
+    $param = "%$search_input%";
+    $connection = connect();
+    if (!$ps = $connection->prepare("select u_userName from users where u_f_name like ? or u_l_name like ?")) {
+        return FALSE;
+    }
+    $ps->bind_param("ss", $param, $param);
+    if (!$ps->execute()) {
+        return FALSE;
+    }
+    $res = $ps->bind_result();
+    
+    while(($row = $res->fetch())){
+        $username[] = $row;
+    }
+    
+    var_dump($username);
+    $ps->close();
+    $connection->close();
+
+    if (!$search_input) {
+        return "user_not_exist";
+    }
+    
+    return $username;
+}
+
+
+var_dump(autocomplete_search('test'));
