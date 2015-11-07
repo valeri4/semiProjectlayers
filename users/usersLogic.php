@@ -36,6 +36,11 @@ function check_reg_nickName($user_name) {
     return $isAvailable;
 }
 
+
+
+
+
+
 //Check if Email exist
 function check_reg_email($email) {
     $connection = connect();
@@ -55,6 +60,10 @@ function check_reg_email($email) {
 
     return $isAvailable;
 }
+
+
+
+
 
 //Registration New User
 function registration($username, $firstName, $lastName, $password, $email, $date, $gender) {
@@ -118,6 +127,10 @@ function registration($username, $firstName, $lastName, $password, $email, $date
     return TRUE;
 }
 
+
+
+
+
 function about_update_after_registration($about) {
 
     $u_id = $_SESSION['u_id'];
@@ -135,6 +148,12 @@ function about_update_after_registration($about) {
 
     return TRUE;
 }
+
+
+
+
+
+
 
 /* * *********************
   LogIn Block
@@ -197,6 +216,10 @@ function log_in($email, $user_password, $remember_me) {
     return TRUE;
 }
 
+
+
+
+
 /* * *********************
   User Profile
  * ********************* */
@@ -224,6 +247,10 @@ function view_user_profile() {
         'user_image' => $user_image
     ));
 }
+
+
+
+
 
 function update_user_profile($firstName, $lastName, $date, $gender, $about) {
 
@@ -262,6 +289,10 @@ function update_user_profile($firstName, $lastName, $date, $gender, $about) {
     return TRUE;
 }
 
+
+
+
+
 function password_update($old_password, $new_password) {
 
     if (!$_SESSION['auth']) {
@@ -295,6 +326,10 @@ function password_update($old_password, $new_password) {
     return TRUE;
 }
 
+
+
+
+
 function write_user_image_to_db($userPicture = 'user_uuid') {
 
     $u_id = $_SESSION['u_id'];
@@ -311,6 +346,9 @@ function write_user_image_to_db($userPicture = 'user_uuid') {
     
     return $userPicture;
 }
+
+
+
 
 //Upload User Picture with class.upload.php library
 function createUserPicture($userPicture) {

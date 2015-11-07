@@ -174,6 +174,10 @@ function get_requests() {
     return json_encode($resultArr);
 }
 
+
+
+
+
 function get_friends_req_result() {
     if (isset($_SESSION['friends_req_count']) == false) {
         return 'no_requests';
@@ -216,6 +220,11 @@ function send_request() {
 
     return 'request_was_sent';
 }
+
+
+
+
+
 
 //Function for Adding or ignore new friend. var note_id -> num of friend in  $_SESSION. var command -> command to execute, add or ignore
 function accept_ignore_request($friend_user_name, $note_id, $command = null) {
@@ -285,6 +294,10 @@ function accept_ignore_request($friend_user_name, $note_id, $command = null) {
 
 //var_dump(accept_ignore_request('tet', 2));
 
+
+
+
+
 //ALL FRIENDS COUNT!!!!
 function get_new_friend_view() {
     $u_id = $_SESSION['u_id'];
@@ -305,6 +318,11 @@ function get_new_friend_view() {
 
     return $count;
 }
+
+
+
+
+
 
 function get_all_friends() {
     $u_id = $_SESSION['u_id'];
@@ -338,6 +356,11 @@ function get_all_friends() {
 
     return json_encode($result);
 }
+
+
+
+
+
 
 function delete_friend($friend_username) {
     $u_id = $_SESSION['u_id'];
@@ -376,6 +399,11 @@ function delete_friend($friend_username) {
 
     return 'user_deleted';
 }
+
+
+
+
+
 
 function autocomplete_search($search_input) {
 

@@ -210,6 +210,10 @@ $(function () {
                         bg.text(0);
                         headerMsg('No New Friends');
                     }
+
+                    setTimeout(function () {
+                        window.location.href = 'index.php';
+                    }, 3000);
                 }
                 if (userData == false) {
                     $('#requestModal').modal('show');

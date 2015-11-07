@@ -108,9 +108,9 @@ $(function () {
     }
 
 
-    function viewAllFriendsPosts(postDate, postText, username, firstName, lastName) {
+    function viewAllFriendsPosts(postDate, postText, username, firstName, lastName, image) {
         postDate = dateTimeFormat(postDate);
-        $('<div class="panel panel-default""><div class="panel-body"><p><a href="friends.php?'+ username +'">' + firstName + ' ' + lastName + '</a></p><p class="pull-right">' + postDate + '</p><div class="clearfix"></div><p class="postText allFriendsPosts">' + postText + '</p></div></div>').appendTo('#allFriendsPosts');
+        $('<div class="panel panel-default""><div class="panel-body"><p class="allFriendPosts_user"><a href="friends.php?'+ username +'"><img src="profileImg/' + image + '.png" height="50" width="50"/>' + firstName + ' ' + lastName + '</a></p><p class="pull-right">' + postDate + '</p><div class="clearfix"></div><p class="postText allFriendsPosts">' + postText + '</p></div></div>').appendTo('#allFriendsPosts');
     }
 
 
@@ -129,11 +129,11 @@ $(function () {
                     if (!userData) {
                         noAllFriendsPostsToView();
                     } else {
-                        console.dir(userData);
                         $.each(userData, function (i, val) {
-                            var details = val.u_f_name + " " + val.u_l_name + " " + val.u_userName;
-                            console.log(details);
-                            viewAllFriendsPosts(val.p_time, val.p_post, val.u_userName, val.u_l_name, val.u_f_name);
+                            
+                            if(val.u_image == 'def_img'){val.u_image = 'man.jpg'}
+                            
+                            viewAllFriendsPosts(val.p_time, val.p_post, val.u_userName, val.u_l_name, val.u_f_name, val.u_image);
                         });
                     }
                 }

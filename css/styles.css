@@ -41,6 +41,10 @@ html, body {
     margin: 15px;
 }
 
+.allFriendPosts_user img{
+    margin-right: 10px; 
+}
+
 .ui-autocomplete { z-index:2147483647; }
 
 .allFriendsPosts{
