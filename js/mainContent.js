@@ -22,7 +22,8 @@ $(function () {
             $('#email').val(userData.email);
             $('.birthDay').text("Birth date: " + userData.date);
             $('.aboutMeBody').text(userData.about);
-            if (userData.gender == '1') {
+            console.log(userData.gender);
+            if (userData.gender == 'male') {
                 $('.gender').text('Gender: Male');
             } else {
                 $('.gender').text('Gender: Female');
