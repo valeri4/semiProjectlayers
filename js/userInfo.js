@@ -36,6 +36,7 @@ $(function () {
             $('#email').val(userData.email);
             $('#bdayCalendar').val(userData.date);
             $('#about').val(userData.about);
+            console.log(userData.gender);
             if (userData.gender == 'male') {
                 $('#male').prop('checked', true);
             } else {

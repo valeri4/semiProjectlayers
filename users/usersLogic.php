@@ -36,11 +36,6 @@ function check_reg_nickName($user_name) {
     return $isAvailable;
 }
 
-
-
-
-
-
 //Check if Email exist
 function check_reg_email($email) {
     $connection = connect();
@@ -60,10 +55,6 @@ function check_reg_email($email) {
 
     return $isAvailable;
 }
-
-
-
-
 
 //Registration New User
 function registration($username, $firstName, $lastName, $password, $email, $date, $gender) {
@@ -105,6 +96,13 @@ function registration($username, $firstName, $lastName, $password, $email, $date
 
     $about = '';
 
+    //gender convert
+    if ($gender == 1) {
+        $gender = "male";
+    } else {
+        $gender = 'female';
+    }
+
     $userSession = new stdClass();
     $userSession->u_id = $u_id;
     $userSession->uuid = $uuid;
@@ -127,10 +125,6 @@ function registration($username, $firstName, $lastName, $password, $email, $date
     return TRUE;
 }
 
-
-
-
-
 function about_update_after_registration($about) {
 
     $u_id = $_SESSION['u_id'];
@@ -148,12 +142,6 @@ function about_update_after_registration($about) {
 
     return TRUE;
 }
-
-
-
-
-
-
 
 /* * *********************
   LogIn Block
@@ -216,10 +204,6 @@ function log_in($email, $user_password, $remember_me) {
     return TRUE;
 }
 
-
-
-
-
 /* * *********************
   User Profile
  * ********************* */
@@ -229,10 +213,10 @@ function view_user_profile() {
     if (!isset($_SESSION['uuID'])) {
         return 'user not logged ';
     }
-    
-    if($_SESSION['user_image'] != 'def_img'){
+
+    if ($_SESSION['user_image'] != 'def_img') {
         $user_image = md5($_SESSION['uuID']);
-    }  else {
+    } else {
         $user_image = 'def_img';
     }
 
@@ -247,10 +231,6 @@ function view_user_profile() {
         'user_image' => $user_image
     ));
 }
-
-
-
-
 
 function update_user_profile($firstName, $lastName, $date, $gender, $about) {
 
@@ -280,6 +260,12 @@ function update_user_profile($firstName, $lastName, $date, $gender, $about) {
     //Custom date Formating d/m/Y function from helpers.php
     $date = dateFormat($date);
 
+    if ($gender == 1) {
+        $gender = 'male';
+    } else {
+        $gender = 'female';
+    }
+
     $_SESSION['firstName'] = $firstName;
     $_SESSION['lastName'] = $lastName;
     $_SESSION['date'] = $date;
@@ -288,10 +274,6 @@ function update_user_profile($firstName, $lastName, $date, $gender, $about) {
 
     return TRUE;
 }
-
-
-
-
 
 function password_update($old_password, $new_password) {
 
@@ -326,10 +308,6 @@ function password_update($old_password, $new_password) {
     return TRUE;
 }
 
-
-
-
-
 function write_user_image_to_db($userPicture = 'user_uuid') {
 
     $u_id = $_SESSION['u_id'];
@@ -340,15 +318,12 @@ function write_user_image_to_db($userPicture = 'user_uuid') {
     $ps->execute();
     $ps->close();
     $connection->close();
-    
+
     //Session Update
     $_SESSION['user_image'] = $userPicture;
-    
+
     return $userPicture;
 }
-
-
-
 
 //Upload User Picture with class.upload.php library
 function createUserPicture($userPicture) {
