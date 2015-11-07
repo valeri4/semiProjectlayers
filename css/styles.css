@@ -43,6 +43,10 @@ html, body {
 
 .ui-autocomplete { z-index:2147483647; }
 
+.allFriendsPosts{
+    padding: 15px;
+}
+
 #friendPostsBlock{
     margin: 10px 15px;
 }

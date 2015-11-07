@@ -30,7 +30,7 @@ $(function () {
 
             //If Image not Default
             if (userData.user_image != 'def_img') {
-                $('.userPicure img').attr('src', 'profileImg/' + userData.user_image + '.png'+ '?' + new Date().getTime());
+                $('.userPicure img').attr('src', 'profileImg/' + userData.user_image + '.png' + '?' + new Date().getTime());
             } else {
                 $('.userPicure img').attr("src", "profileImg/man.jpg");
             }
@@ -51,9 +51,9 @@ $(function () {
         var hours = date.getHours();
         var minutes = "0" + date.getMinutes();
         var days = date.getDate();
-        var month = date.getMonth()+1;
+        var month = date.getMonth() + 1;
         var year = date.getFullYear()
-        var formattedTime = hours + ':' + minutes.substr(-2) + " " +  days + "/" + month + "/" + year;
+        var formattedTime = hours + ':' + minutes.substr(-2) + " " + days + "/" + month + "/" + year;
 
         return formattedTime;
     }
@@ -63,16 +63,16 @@ $(function () {
 
     function viewPosts(postId, postDate, postText) {
         postDate = dateTimeFormat(postDate);
-        
+
         $('<div class="panel panel-default postBlock" id="' + postId + '"><div class="panel-body"><div class="dropdown pull-right"><button class="btn btn-default postMenu dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button><ul class="dropdown-menu" aria-labelledby="dropdownMenu1"><li><a href="#" id="editPost">Edit</a></li><li><a href="#" id="deletePost">Delete</a></li></ul></div><p class="pull-right">' + postDate + '</p><div class="clearfix"></div><p class="postText">' + postText + '</p></div></div>').appendTo('#postsBlock');
     }
 
     function addPost(postId) {
         //Remove No Posts Div after Posting a first message
-        if($('.noPostsView').length > 0){
+        if ($('.noPostsView').length > 0) {
             $('.noPostsView').remove();
         }
-        
+
         var postDate = new Date();
         postDate = dateTimeFormat(postDate);
         var postText = $('#addPost').val();
@@ -101,6 +101,45 @@ $(function () {
     });
     /* View User Posts End*/
 
+    /**********   View All Friends Posts       *****************************************/
+    function noAllFriendsPostsToView() {
+        $(' <div class="panel panel-default noPostsView"><div class="panel-body"><h4 class="text-center">No posts to view</h4></div></div>').appendTo('#allFriendsPosts');
+    }
+
+
+    function viewAllFriendsPosts(postDate, postText, username, firstName, lastName) {
+        postDate = dateTimeFormat(postDate);
+        $('<div class="panel panel-default""><div class="panel-body"><p><a href="friends.php?'+ username +'">' + firstName + ' ' + lastName + '</a></p><p class="pull-right">' + postDate + '</p><div class="clearfix"></div><p class="postText allFriendsPosts">' + postText + '</p></div></div>').appendTo('#allFriendsPosts');
+    }
+
+
+        $.ajax({
+            type: 'GET',
+            url: "posts/postsAPI.php",
+            data: {command: "view_all_friends_posts"},
+            error: function (err) {
+                console.log("Error: " + err.status);
+            },
+            success: function (userData) {
+                userData = JSON.parse(userData);
+                if (userData == 'not_friends') {
+                    notFriends();
+                } else {
+                    if (!userData) {
+                        noAllFriendsPostsToView();
+                    } else {
+                        console.dir(userData);
+                        $.each(userData, function (i, val) {
+                            var details = val.u_f_name + " " + val.u_l_name + " " + val.u_userName;
+                            console.log(details);
+                            viewAllFriendsPosts(val.p_time, val.p_post, val.u_userName, val.u_l_name, val.u_f_name);
+                        });
+                    }
+                }
+            }
+        });
+  
+    /* View User Posts End*/
 
 
 
@@ -253,11 +292,11 @@ $(function () {
             }
         });
     });
-    
-    
-    
-    
-    
+
+
+
+
+
     /**************************
      * Remove Post
      * 

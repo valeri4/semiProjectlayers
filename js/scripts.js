@@ -1,7 +1,7 @@
 
-var countNewFriends2view;
-
 $(function () {
+
+    //Get new requests  
     $.ajax({
         type: 'GET',
         url: "friends/friendsAPI.php",
@@ -28,6 +28,8 @@ $(function () {
         }
     });
 
+
+//ALL FRIENDS COUNT!!!!
     $.ajax({
         type: 'GET',
         url: "friends/friendsAPI.php",
@@ -39,18 +41,17 @@ $(function () {
 
             switch (userData) {
                 case 'no_new_friends':
+                    $('#newFriends').text(0);
                     break;
                 default:
                     $('#newFriends').text(userData);
-                    countNewFriends2view = userData;
-                    console.log(countNewFriends2view);
             }
         }
     });
 
 
 
-
+//Auto complete Search
     var NoResultsLabel = "No Results";
     $("#srch-term").autocomplete({
         source: function (request, response) {
@@ -82,10 +83,10 @@ $(function () {
 
             if (ui.item.label === NoResultsLabel) {
                 event.preventDefault();
-            }else{
+            } else {
                 console.log(ui.item.label);
                 console.log(ui.item.value);
-                
+
                 window.location.href = "friends.php?" + ui.item.value;
             }
 

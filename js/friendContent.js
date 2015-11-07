@@ -138,6 +138,12 @@ $(function () {
      **************************/
 
     /**********  Send Request        *****************************************/
+
+    function headerMsg(msg) {
+        $('#friendsContenHeader h3').text(msg);
+    }
+
+
     $('#friendPostsBlock, #aboutBlock').on('click', 'a[href*="addToFriends"]', function () {
         send_friend_request();
     });
@@ -229,7 +235,7 @@ $(function () {
 
     /**********  Ignore Request        *****************************************/
     $('#friendPostsBlock').on('click', 'a[href*="Ignore_"]', function () {
-        note_idOrg = $(this).parent().parent.attr('id');
+        note_idOrg = $(this).parent().parent().attr('id');
         note_id = note_idOrg.slice(7);
         note_id = parseInt(note_id) + 1;
         username = $(this).attr('id');
@@ -248,9 +254,6 @@ $(function () {
      * View All Requests from Users
      * 
      **************************/
-    function headerMsg(msg) {
-        $('#friendsContenHeader h3').text(msg);
-    }
 
     function view_friends_req(count, firstName, lastName, userImg, userName) {
 
@@ -306,8 +309,8 @@ $(function () {
      **************************/
 
     var countFriends2view = 0;
-    countNewFriends2view = $('#newFriends').text();
-    console.log('new count: ' + countNewFriends2view);
+
+
     function all_friends_view(count, firstName, lastName, userImg, userName) {
 
         countFriends2view++;
@@ -320,9 +323,6 @@ $(function () {
 
         $('#friendPostsBlock').append("<div id='friend_" + count + "' class='friend_req_user'><div class='newFriend'><img src='" + imgSrc + "' alt='User Image' height='50' width='50'/><p><a href='friends.php?" + userName + "'>" + firstName + " " + lastName + "</a></p><a href='#remove_" + userName + "' class='btn btn-xs btn-danger reqIgnore' id='" + userName + "'>Remove</a></div></div>");
 
-        if (countFriends2view <= countNewFriends2view) {
-            $('.newFriend').css({width: '360px', background: 'rgba(178, 255, 102, .3)'});
-        }
     }
 
     function allFriends() {
@@ -352,12 +352,11 @@ $(function () {
                             all_friends_view(i, firstName, lastName, userImg, userName);
                         }
                 }
-                console.dir(userData);
-
-                console.dir(userData.length);
             }
         });
     }
+
+
 
 
     /**************************

@@ -267,8 +267,8 @@ function accept_ignore_request($friend_user_name, $note_id, $command = null) {
         $sql = "insert into relationships (u_id, friend_id) values ($u_id, $friend_id), ($friend_id, $u_id)";
         insert($sql);
 
-        $sql = "insert into new_friend_temp ( newf_u_id, newf_friend_id) values ($u_id, $friend_id)";
-        insert($sql);
+//        $sql = "insert into new_friend_temp ( newf_u_id, newf_friend_id) values ($u_id, $friend_id)";
+//        insert($sql);
     }
 
     $sql = "delete from friend_request 
@@ -285,11 +285,11 @@ function accept_ignore_request($friend_user_name, $note_id, $command = null) {
 
 //var_dump(accept_ignore_request('tet', 2));
 
-
+//ALL FRIENDS COUNT!!!!
 function get_new_friend_view() {
     $u_id = $_SESSION['u_id'];
 
-    $sql = "select newf_u_id from new_friend_temp where newf_friend_id = $u_id";
+    $sql = "select friend_id from relationships where u_id = $u_id";
 
     $result = get_array($sql);
 

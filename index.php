@@ -107,7 +107,7 @@ require_once 'includes/header.php';
                         </div>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="friends_posts">
-                        <p>Profile Page</p>
+                        <div id='allFriendsPosts'>
                     </div>
                 </div>
             </div>

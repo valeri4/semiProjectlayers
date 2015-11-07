@@ -58,6 +58,8 @@ switch ($command) {
         echo delete_friend($friend_user_name);
         break;
     
+    
+    //ALL FRIENDS COUNT!!!!
     case 'get_new_friend_view':
         echo get_new_friend_view();
         break;

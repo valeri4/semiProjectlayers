@@ -14,6 +14,10 @@ switch ($command) {
         echo json_encode(view_friend_posts());
         break;
 
+    case "view_all_friends_posts":
+        echo json_encode(view_all_friends_posts());
+        break;
+
 
     case "add_post":
         $add_post = $_POST['addPost'];

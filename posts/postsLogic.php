@@ -5,7 +5,6 @@ require_once (__DIR__ . '/../includes/helpers.php'); //Includes Session Function
 
 session_start();
 
-
 function add_post($post) {
     $u_id = $_SESSION['u_id'];
     $uuID = $_SESSION['uuID'];
@@ -26,8 +25,6 @@ function add_post($post) {
     return $postUid;
 }
 
-
-
 function update_post($post, $postUid) {
     $u_id = $_SESSION['u_id'];
 
@@ -44,9 +41,6 @@ function update_post($post, $postUid) {
 
     return TRUE;
 }
-
-
-
 
 function delete_post($postUid) {
     $u_id = $_SESSION['u_id'];
@@ -65,9 +59,6 @@ function delete_post($postUid) {
     return TRUE;
 }
 
-
-
-
 function view_user_posts() {
     if (!$u_id = $_SESSION['u_id']) {
         return FALSE;
@@ -83,8 +74,6 @@ function view_user_posts() {
     return get_array($sql);
 }
 
-
-
 function view_friend_posts() {
     if (!$u_id = $_SESSION['friend_id']) {
         return "not_friends";
@@ -99,3 +88,26 @@ function view_friend_posts() {
 
     return get_array($sql);
 }
+
+function view_all_friends_posts() {
+    $u_id = $_SESSION['u_id'];
+        
+
+    $sql = "select u_f_name, u_l_name, u_userName, p_post, p_time
+            from users as u 
+            join relationships as r 
+            on u.u_id = r.friend_id 
+            join posts as p
+            on r.friend_id = p.u_id where r.u_id = $u_id
+            order by p_time desc";
+
+
+    if (!get_array($sql)) {
+        return FALSE;
+    }
+
+    return get_array($sql);
+}
+
+
+//var_dump(view_all_friends_posts());
