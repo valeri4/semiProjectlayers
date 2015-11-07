@@ -49,17 +49,54 @@ $(function () {
     });
 
 
-    var availableTags = [
-        "ActionScript", "AppleScript", "Asp", "BASIC", "C", "C++",
-        "Clojure", "COBOL", "ColdFusion", "Erlang", "Fortran",
-        "Groovy", "Haskell", "Java", "JavaScript", "Lisp", "Perl",
-        "PHP", "Python", "Ruby", "Scala", "Scheme"
-    ];
 
+
+    var NoResultsLabel = "No Results";
     $("#srch-term").autocomplete({
-        source: availableTags
-    });
+        source: function (request, response) {
+            $.ajax({
+                type: "GET",
+                url: "friends/friendsAPI.php",
+                dataType: "json",
+                data: {
+                    command: 'autocomplete',
+                    search_input: request.term
+                },
+                success: function (data) {
+                    searchResult = [];
 
+                    if (data == "user_not_exist") {
+                        searchResult = [NoResultsLabel];
+                    } else {
+                        for (i = 0; i < data.length; i++) {
+                            searchResult.push({label: data[i].first_name + " " + data[i].last_name, value: data[i].username});
+                        }
+                    }
+
+                    response(searchResult);
+                }
+            });
+        },
+        minLength: 3,
+        select: function (event, ui) {
+
+            if (ui.item.label === NoResultsLabel) {
+                event.preventDefault();
+            }else{
+                console.log(ui.item.label);
+                console.log(ui.item.value);
+                
+                window.location.href = "friends.php?" + ui.item.value;
+            }
+
+        },
+        open: function () {
+            $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+        },
+        close: function () {
+            $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+        }
+    });
 });
 
 

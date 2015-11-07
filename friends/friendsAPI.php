@@ -61,5 +61,11 @@ switch ($command) {
     case 'get_new_friend_view':
         echo get_new_friend_view();
         break;
+    
+    
+    case 'autocomplete':
+        $search_input = $_GET['search_input'];
+        echo autocomplete_search($search_input);
+        break;
     //default : redirect('../error.php');
 }

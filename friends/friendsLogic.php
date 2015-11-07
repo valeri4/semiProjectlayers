@@ -4,9 +4,9 @@ require_once '../includes/DAL.php';
 require_once '../includes/helpers.php';
 
 session_start();
-$u_id = $_SESSION['u_id'];
 
 function get_friend_data($friend_user_name) {
+    $u_id = $_SESSION['u_id'];
 
     $friend_user_name = addslashes($friend_user_name);
     $friend_user_name = strip_tags($friend_user_name);
@@ -128,6 +128,7 @@ function get_friend_data($friend_user_name) {
 
 
 function get_requests() {
+    $u_id = $_SESSION['u_id'];
 
     $sql = "select req_u_id from friend_request where req_friend_id = $u_id";
 
@@ -191,6 +192,8 @@ function get_friends_req_result() {
 
 function send_request() {
 
+    $u_id = $_SESSION['u_id'];
+
     if (!$_SESSION['friend_search_id']) {
         return 'no_friend_id';
     }
@@ -216,6 +219,8 @@ function send_request() {
 
 //Function for Adding or ignore new friend. var note_id -> num of friend in  $_SESSION. var command -> command to execute, add or ignore
 function accept_ignore_request($friend_user_name, $note_id, $command = null) {
+    $u_id = $_SESSION['u_id'];
+
 
     $note_id = addslashes($note_id);
     $note_id = strip_tags($note_id);
@@ -282,6 +287,7 @@ function accept_ignore_request($friend_user_name, $note_id, $command = null) {
 
 
 function get_new_friend_view() {
+    $u_id = $_SESSION['u_id'];
 
     $sql = "select newf_u_id from new_friend_temp where newf_friend_id = $u_id";
 
@@ -301,6 +307,7 @@ function get_new_friend_view() {
 }
 
 function get_all_friends() {
+    $u_id = $_SESSION['u_id'];
 
     $sql = "select u.u_uID, u_f_name, u_l_name, u_image, u_userName
               from users  as u
@@ -333,6 +340,7 @@ function get_all_friends() {
 }
 
 function delete_friend($friend_username) {
+    $u_id = $_SESSION['u_id'];
 
     $friend_username = addslashes($friend_username);
     $friend_username = strip_tags($friend_username);
@@ -370,32 +378,54 @@ function delete_friend($friend_username) {
 }
 
 function autocomplete_search($search_input) {
-    
-    $param = "%$search_input%";
+
+    $u_id = $_SESSION['u_id'];
+
+    $search_input = addslashes($search_input);
+    $search_input = strip_tags($search_input);
+
+
+    $parameter = "%$search_input%";
     $connection = connect();
-    if (!$ps = $connection->prepare("select u_userName from users where u_f_name like ? or u_l_name like ?")) {
+    if (!$ps = $connection->prepare("select u_id, u_uID, u_userName, u_f_name, u_l_name, u_image from users where (u_f_name like ?) or (u_l_name like ?)")) {
         return FALSE;
     }
-    $ps->bind_param("ss", $param, $param);
+    $ps->bind_param("ss", $parameter, $parameter);
     if (!$ps->execute()) {
         return FALSE;
     }
-    $res = $ps->bind_result();
-    
-    while(($row = $res->fetch())){
-        $username[] = $row;
+    $ps->bind_result($friend_u_id, $friend_uuID, $friend_username, $friend_first_name, $friend_last_name, $friend_image);
+
+    //get autocomplete search array result
+    $i = 0;
+    $res = [];
+    while ($ps->fetch()) {
+
+        if ($friend_image != 'def_img') {
+            $friend_image = md5($friend_uuID);
+        } else {
+            $friend_image = 'def_img';
+        }
+        
+        if ($u_id != $friend_u_id) {
+            $res[$i]["username"] = $friend_username;
+            $res[$i]["first_name"] = $friend_first_name;
+            $res[$i]["last_name"] = $friend_last_name;
+            $res[$i]["image"] = $friend_image;
+            $i++;
+        }
     }
-    
-    var_dump($username);
+
     $ps->close();
     $connection->close();
-
-    if (!$search_input) {
-        return "user_not_exist";
-    }
     
-    return $username;
+    //if user not exist or found username is same to session user
+    if (!$friend_username || $res == null) {
+        return json_encode("user_not_exist");
+    }
+
+
+    return json_encode($res);
 }
 
-
-var_dump(autocomplete_search('test'));
+//var_dump(autocomplete_search('te'));
