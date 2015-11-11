@@ -16,10 +16,10 @@ if ($_SESSION['auth']) {
         <title>FSN - First Social Network Project</title>
         <meta name="generator" content="Bootply" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap.3.5.min.css" rel="stylesheet" type="text/css"/>
         <link href="css/formValidation.min.css" rel="stylesheet" type="text/css"/>
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css" />
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css" />
+        <link href="css/datepicker.css" rel="stylesheet" type="text/css"/>
+        <link href="css/datepicker3.css" rel="stylesheet" type="text/css"/>
         <!--[if lt IE 9]>
             <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
